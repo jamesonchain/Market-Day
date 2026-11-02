@@ -22,4 +22,4 @@ Then open `http://localhost:3000`.
 
 ## Hackathon window
 
-Marketday is being built for the NEAR hackathon dev window of November 1–14, 2026. See [`docs/near-notes.md`](docs/near-notes.md) for verified capability notes and links.
+Marketday is being built for the NEAR hackathon dev window of November 1 to 14, 2026. See [`docs/near-notes.md`](docs/near-notes.md) for verified capability notes and links.
