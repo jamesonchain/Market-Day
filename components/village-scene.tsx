@@ -28,12 +28,21 @@ export default function VillageScene() {
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (!canvasRef.current) return;
-    const app = new PIXI.Application(); let disposed = false;
-    void app.init({ canvas: canvasRef.current, resizeTo: canvasRef.current.parentElement ?? undefined, antialias: true, backgroundAlpha: 0 });
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const app = new PIXI.Application();
+    let disposed = false;
+    let initialized = false;
+    let tickerCallback: ((ticker: PIXI.Ticker) => void) | undefined;
+
     const setup = async () => {
-      await app.renderer.resize(canvasRef.current!.clientWidth || 1200, canvasRef.current!.clientHeight || 720);
-      if (disposed) return;
+      await app.init({ canvas, resizeTo: canvas.parentElement ?? undefined, antialias: true, backgroundAlpha: 0 });
+      initialized = true;
+      if (disposed) {
+        app.destroy(true, { children: true, texture: true });
+        return;
+      }
+
       const { width, height } = app.screen;
       const world = new PIXI.Container(), distant = new PIXI.Container(), foreground = new PIXI.Container(); world.addChild(distant, foreground); app.stage.addChild(world);
       distant.addChild(new PIXI.Graphics().rect(0, height * .34, width, height * .66).fill({ color: 0xc8b99a }));
@@ -52,9 +61,17 @@ export default function VillageScene() {
       [0.08, .28, .52, .89, .96].forEach((x, i) => distant.addChild(sprite(treeTexture, width * x, height * (.56 + (i % 2) * .12), 1.4 + (i % 2) * .4)));
       const villagerTexture = makeTexture(app.renderer, 0x2a5bb5, 15, 29);
       [.28, .47, .72, .84].forEach((x, i) => foreground.addChild(sprite(villagerTexture, width * x, height * (.82 - (i % 2) * .1), 1)));
-      app.ticker.add((ticker) => { if (reducedMotion) return; const t = ticker.lastTime / 1000; world.x = Math.sin(t * .11) * 7; distant.x = Math.sin(t * .06) * 3; foreground.y = Math.sin(t * .35) * 1.5; });
+      tickerCallback = (ticker) => { if (reducedMotion) return; const t = ticker.lastTime / 1000; world.x = Math.sin(t * .11) * 7; distant.x = Math.sin(t * .06) * 3; foreground.y = Math.sin(t * .35) * 1.5; };
+      app.ticker.add(tickerCallback);
     };
-    void setup(); return () => { disposed = true; app.destroy(true, { children: true, texture: true }); };
+
+    void setup();
+    return () => {
+      disposed = true;
+      if (!initialized) return;
+      if (tickerCallback) app.ticker.remove(tickerCallback);
+      app.destroy(true, { children: true, texture: true });
+    };
   }, [reducedMotion]);
 
   return <section className={`scene-shell relative min-h-screen overflow-hidden ${phase === "night" ? "is-night" : ""}`}>
