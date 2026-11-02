@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import * as PIXI from "pixi.js";
+import MarketEffects from "./market-effects";
 
 type Phase = "day" | "night";
 type RendererName = "PIXIJ / WEBGL" | "CANVAS 2D FALLBACK" | "STARTING";
@@ -175,7 +176,7 @@ export default function VillageScene() {
   return <section className={`scene-shell relative min-h-screen overflow-hidden ${phase === "night" ? "is-night" : ""}`}>
     <div className="grain absolute inset-0 z-10" />
     <header className="relative z-20 flex items-start justify-between p-5 sm:p-8"><div><p className="dot-text text-[10px] text-[var(--blue)]">[ 00 / MARKETDAY ]</p><h1 className="mt-2 text-3xl font-bold tracking-[-0.08em] sm:text-5xl">A village that settles itself.</h1><p className="mt-3 max-w-md text-xs leading-relaxed text-[var(--muted)]">Every villager is an agent. Every agent has a wallet. Watch the market breathe.</p></div><button onClick={() => setPhase((current) => current === "day" ? "night" : "day")} className="border border-[var(--ink)]/30 bg-[var(--paper)]/70 px-3 py-2 text-[10px] tracking-widest transition hover:bg-[var(--paper)]" aria-label="Toggle day and night cycle">{phase === "day" ? "☼ DAY" : "◐ NIGHT"}</button></header>
-    <div className="relative z-0 mx-3 h-[min(68vh,720px)] overflow-hidden border border-[var(--ink)]/20 bg-[#c8b99a]/30 sm:mx-8"><canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="Animated dot matrix village scene" /><div className="pointer-events-none absolute bottom-4 left-4 text-[10px] text-[var(--ink)]/70">[ LIVE SIMULATION ]</div><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute right-4 top-4 flex flex-col items-end gap-1 text-[10px] text-[var(--blue)]"><span className="flex items-center gap-2"><span className="h-2 w-2 animate-pulse rounded-full bg-[var(--blue)]" /> 04 AGENTS ONLINE</span><span className="text-[var(--muted)]">RENDERER / {renderer}</span></motion.div></div>
+    <div className="relative z-0 mx-3 h-[min(68vh,720px)] overflow-hidden border border-[var(--ink)]/20 bg-[#c8b99a]/30 sm:mx-8"><canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="Animated dot matrix village scene" /><div className="pointer-events-none absolute bottom-4 left-4 text-[10px] text-[var(--ink)]/70">[ LIVE SIMULATION ]</div><motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute right-4 top-4 flex flex-col items-end gap-1 text-[10px] text-[var(--blue)]"><span className="flex items-center gap-2"><span className="h-2 w-2 animate-pulse rounded-full bg-[var(--blue)]" /> 05 AGENTS ONLINE</span><span className="text-[var(--muted)]">RENDERER / {renderer}</span></motion.div><MarketEffects /></div>
     <footer className="relative z-20 flex flex-wrap items-center justify-between gap-4 p-5 text-[10px] sm:p-8"><div className="flex gap-5"><span className="dot-text">[ TESTNET ]</span><span className="text-[var(--muted)]">{ledgerMode}</span></div><div className="text-[var(--muted)]">WATCH MODE · NO WALLET POPUP</div></footer>
   </section>;
 }

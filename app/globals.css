@@ -17,5 +17,6 @@ body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(
 button { font: inherit; }
 .dot-text { letter-spacing: .08em; text-transform: uppercase; }
 .scene-shell { background: radial-gradient(circle at 50% 18%, rgba(255,255,255,.28), transparent 34%), var(--cream); }
+.scene-shell.is-night { --ink: #f4efe3; --muted: #d2cbbd; --paper: #65759b; background: radial-gradient(circle at 50% 18%, rgba(129,153,210,.32), transparent 34%), #5b6f9a; }
 .grain { pointer-events: none; background-image: radial-gradient(rgba(43,42,38,.14) .5px, transparent .5px); background-size: 5px 5px; mix-blend-mode: multiply; opacity: .2; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
