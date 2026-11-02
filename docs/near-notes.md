@@ -27,3 +27,11 @@ Relevant docs: [NEAR Auth](https://auth.near.org/) and [NEAR Auth GitHub](https:
 - `testnet`: real NEAR account reads/writes can be added, but NEAR Intents trades must remain simulated and visibly labeled.
 - `mainnet`: real NEAR calls and real Intents settlement are the goal, subject to API credentials, funded accounts, and production safety controls.
 - No API name, endpoint, or testnet capability is assumed here unless it is documented by NEAR. The adapter boundary exists to prevent UI code from pretending that simulation is settlement.
+
+## Stage 3 implementation notes
+
+Marketday now uses `near-api-js` on the server for parent account subaccount creation, native NEAR gas funding, account balance reads, fungible token storage registration, and testnet token transfers. The parent account and agent keys are read only from server environment variables. The seed script is idempotent for accounts already present on chain, and it never imports private keys into client code.
+
+The official `@defuse-protocol/one-click-sdk-typescript` package is used for `dry: true` quotes through the 1Click endpoint. The quote is labeled `INTENTS QUOTE (mainnet data)`, not testnet settlement. Without a configured testnet parent key, USDC contract, or agent keys, the adapter intentionally reports `DEMO LEDGER`. Mainnet swaps are behind `ENABLE_MAINNET_INTENTS=false`.
+
+Required real testnet inputs are a funded parent account key, a testnet USDC contract ID, and private keys for the five agent subaccounts. Obtain testnet NEAR from the NEAR faucet and testnet USDC from the Circle faucet. The app does not claim faucet balances exist until those values are supplied.
