@@ -1,6 +1,7 @@
 import { decide, proposalEvent } from "./agents";
 import type { AgentRole, AgentState, EconomyEvent } from "./types";
 import { getSettlementAdapter } from "../near/settlement";
+import { blockedEvent, checkSpendingPolicy } from "../policy/policy";
 
 const roles: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
 const agents = new Map<AgentRole, AgentState>([
@@ -35,11 +36,18 @@ export async function runTick() {
       const decision = await decide(role, `${context} A baker wants flour.`);
       emit(proposalEvent(tickNumber, role, decision.proposal, decision.source));
     }
-    emit(event(tickNumber, "policy check", "baker", "candidate offers are ready for settlement policy", "LOCAL RULE"));
+    const overcharge = checkSpendingPolicy({ buyer: "baker", seller: "farmerTwo", item: "flour", amount: 2, unitPrice: 12, spentToday: 0 }, undefined, 3);
+    emit(event(tickNumber, "policy check", "baker", "farmer-two offer checked against the leash", "LOCAL RULE", { allowed: overcharge.allowed }));
+    if (!overcharge.allowed) emit(blockedEvent(tickNumber, "baker", overcharge.reason));
+    const fair = checkSpendingPolicy({ buyer: "baker", seller: "farmer", item: "flour", amount: 2, unitPrice: 3, spentToday: 0 }, undefined, 3);
+    emit(event(tickNumber, "policy check", "baker", fair.reason, "LOCAL RULE", { allowed: fair.allowed }));
+    if (!fair.allowed) return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12) };
     const adapter = getSettlementAdapter();
     const settlement = await adapter.transferToken("farmer", "baker", "3000000");
     baker.inventory.flour = (baker.inventory.flour ?? 0) + 2;
     agents.get("farmer")!.inventory.wheat = Math.max(0, (agents.get("farmer")!.inventory.wheat ?? 0) - 2);
+    baker.balance -= 3;
+    agents.get("farmer")!.balance += 3;
     emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${settlement.mode}`, settlement.mode, { amount: 3, token: "USDC" }));
   } else {
     const miller = agents.get("miller")!;
