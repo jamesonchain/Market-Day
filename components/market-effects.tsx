@@ -32,7 +32,9 @@ export default function MarketEffects() {
       if (event.type === "blocked") { setBlocked(event); window.setTimeout(() => setBlocked(null), 1500); }
     };
     const tick = window.setInterval(() => { void fetch("/api/tick", { method: "POST" }); }, 9000);
-    return () => { stream.close(); window.clearInterval(tick); };
+    const replay = (event: KeyboardEvent) => { if (event.key.toLowerCase() === "d") void fetch("/api/demo", { method: "POST" }); };
+    window.addEventListener("keydown", replay);
+    return () => { stream.close(); window.clearInterval(tick); window.removeEventListener("keydown", replay); };
   }, []);
 
   const enableSound = () => {
@@ -45,6 +47,7 @@ export default function MarketEffects() {
   const latest = events.at(-1);
   const speech = events.filter((event) => ["bid", "offer", "counter"].includes(event.type)).slice(-3);
   const settled = events.filter((event) => event.type === "settled");
+  const runDemo = () => { void fetch("/api/demo", { method: "POST" }); };
 
   return <>
     <div className="pointer-events-none absolute inset-0 z-20">
@@ -52,6 +55,6 @@ export default function MarketEffects() {
       {settled.map((event) => <motion.div key={event.id} initial={{ opacity: 0, x: 0, y: 120 }} animate={{ opacity: [0, 1, 1, 0], x: 210, y: 15 }} transition={{ duration: reducedMotion ? 0.01 : 1.4 }} className="absolute left-[32%] top-[48%] text-lg text-[var(--blue)]">●</motion.div>)}
       {blocked && <motion.div initial={{ opacity: 0 }} animate={{ opacity: [0, 1, 0] }} transition={{ duration: reducedMotion ? 0.01 : 1.2 }} className="absolute inset-[20%] border-2 border-[var(--blue)] shadow-[0_0_25px_rgba(42,91,181,.7)]"><span className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[var(--blue)] px-2 py-1 text-[9px] text-white">[ BLOCKED ] {blocked.data?.reason ?? blocked.message}</span></motion.div>}
     </div>
-    <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 text-[9px] text-[var(--muted)]"><span>{latest ? `[ ${latest.tick.toString().padStart(2, "0")} / ${latest.type.toUpperCase()} ]` : "[ WAITING FOR MARKET ]"}</span><button onClick={enableSound} className="border border-[var(--ink)]/20 bg-[var(--paper)]/80 px-2 py-1 hover:bg-white">{soundReady ? "SOUND ON" : "ENABLE SOUND"}</button></div>
+    <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 text-[9px] text-[var(--muted)]"><button onClick={runDemo} className="border border-[var(--blue)] bg-[var(--paper)]/90 px-2 py-1 text-[var(--blue)] hover:bg-white">DEMO [ D ]</button><span>{latest ? `[ ${latest.tick.toString().padStart(2, "0")} / ${latest.type.toUpperCase()} ]` : "[ WAITING FOR MARKET ]"}</span><button onClick={enableSound} className="border border-[var(--ink)]/20 bg-[var(--paper)]/80 px-2 py-1 hover:bg-white">{soundReady ? "SOUND ON" : "ENABLE SOUND"}</button></div>
   </>;
 }

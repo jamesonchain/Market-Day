@@ -2,6 +2,7 @@ import { decide, proposalEvent } from "./agents";
 import type { AgentRole, AgentState, EconomyEvent } from "./types";
 import { getSettlementAdapter } from "../near/settlement";
 import { blockedEvent, checkSpendingPolicy } from "../policy/policy";
+import { loadSnapshot, persistenceMode, saveSnapshot } from "./persistence";
 
 const roles: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
 const agents = new Map<AgentRole, AgentState>([
@@ -14,6 +15,7 @@ const agents = new Map<AgentRole, AgentState>([
 let tickNumber = 0;
 let events: EconomyEvent[] = [];
 const listeners = new Set<(event: EconomyEvent) => void>();
+let hydrated: Promise<void> | null = null;
 
 function emit(event: EconomyEvent) { events = [...events.slice(-99), event]; listeners.forEach((listener) => listener(event)); return event; }
 function event(tick: number, type: EconomyEvent["type"], actor: AgentRole, message: string, label: EconomyEvent["label"], data?: EconomyEvent["data"]): EconomyEvent { return { id: crypto.randomUUID(), tick, at: new Date().toISOString(), type, actor, message, label, data }; }
@@ -21,8 +23,11 @@ function event(tick: number, type: EconomyEvent["type"], actor: AgentRole, messa
 export function getAgents() { return roles.map((role) => agents.get(role)!); }
 export function getEvents() { return events; }
 export function subscribe(listener: (event: EconomyEvent) => void) { listeners.add(listener); return () => listeners.delete(listener); }
+async function hydrate() { if (!hydrated) hydrated = loadSnapshot().then((snapshot) => { if (!snapshot) return; tickNumber = snapshot.tick; events = snapshot.events; snapshot.agents.forEach((agent) => agents.set(agent.role, agent)); }); await hydrated; }
+async function persist() { await saveSnapshot({ agents: getAgents(), events: getEvents(), tick: tickNumber }); }
 
 export async function runTick() {
+  await hydrate();
   tickNumber += 1;
   const baker = agents.get("baker")!;
   baker.needs.hunger = Math.min(100, baker.needs.hunger + 3);
@@ -54,5 +59,32 @@ export async function runTick() {
     miller.inventory.flour = (miller.inventory.flour ?? 0) + 1;
     emit(event(tickNumber, "produced", "miller", "miller produced flour", "LOCAL RULE", { item: "flour", amount: 1 }));
   }
-  return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12) };
+  await persist();
+  return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12), persistence: persistenceMode() };
+}
+
+export async function runStoryBeat() {
+  await hydrate();
+  tickNumber += 1;
+  const baker = agents.get("baker")!; const farmer = agents.get("farmer")!; const merchant = agents.get("merchant")!;
+  baker.inventory.flour = 0;
+  emit(event(tickNumber, "need", "baker", "baker has run out of flour", "LOCAL RULE", { item: "flour", amount: 0 }));
+  emit(event(tickNumber, "bid", "baker", "baker posts a flour bid in the square", "LOCAL RULE", { amount: 2, fairPrice: 3 }));
+  emit(event(tickNumber, "offer", "farmer", "farmer offers 2 flour at 3 USDC each", "LOCAL RULE", { unitPrice: 3 }));
+  emit(event(tickNumber, "offer", "farmerTwo", "farmer two offers 2 flour at 12 USDC each", "LOCAL RULE", { unitPrice: 12 }));
+  emit(event(tickNumber, "offer", "miller", "miller offers 2 flour at 4 USDC each", "LOCAL RULE", { unitPrice: 4 }));
+  const overcharge = checkSpendingPolicy({ buyer: "baker", seller: "farmerTwo", item: "flour", amount: 2, unitPrice: 12, spentToday: 0 }, undefined, 3);
+  emit(event(tickNumber, "policy check", "baker", "leash checks farmer two quote", "LOCAL RULE", { allowed: overcharge.allowed }));
+  if (!overcharge.allowed) emit(blockedEvent(tickNumber, "baker", overcharge.reason));
+  const adapter = getSettlementAdapter();
+  const flourSettlement = await adapter.transferToken("farmer", "baker", "6000000");
+  farmer.inventory.wheat = Math.max(0, (farmer.inventory.wheat ?? 0) - 2); baker.inventory.flour = 2; farmer.balance += 6; baker.balance -= 6;
+  emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${flourSettlement.mode}`, flourSettlement.mode, { amount: 2, unitPrice: 3 }));
+  baker.inventory.flour = 0; baker.inventory.bread = (baker.inventory.bread ?? 0) + 4;
+  emit(event(tickNumber, "produced", "baker", "baker baked 4 bread", "LOCAL RULE", { item: "bread", amount: 4 }));
+  const breadSettlement = await adapter.transferToken("merchant", "baker", "8000000");
+  merchant.inventory.bread = (merchant.inventory.bread ?? 0) + 2; baker.inventory.bread -= 2; merchant.balance -= 8; baker.balance += 8;
+  emit(event(tickNumber, "settled", "merchant", `merchant bought bread via ${breadSettlement.mode}`, breadSettlement.mode, { item: "bread", amount: 2, unitPrice: 4 }));
+  await persist();
+  return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() };
 }
