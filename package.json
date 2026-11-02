@@ -29,6 +29,7 @@
     "framer-motion": "^14.9.0",
     "near-api-js": "^7.4.0",
     "next": "^16.4.4",
+    "next-auth": "^5.0.0-beta.32",
     "pixi.js": "^8.22.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
@@ -42,9 +43,8 @@
     "eslint-config-next": "^16.4.4",
     "postcss": "^8.5.32",
     "tailwindcss": "^4.3.3",
-    "tsx": "^4.23.15",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "vitest": "^5.1.0",
-    "tsx": "^4.20.6"
+    "vitest": "^5.1.0"
   }
 }
