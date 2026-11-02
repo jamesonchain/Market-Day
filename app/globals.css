@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #e9e2d0;
+  --paper: #f4efe3;
+  --ink: #2b2a26;
+  --muted: #777265;
+  --blue: #2a5bb5;
+  --blue-bright: #4d83e8;
+  --rust: #b86443;
+  --sage: #80977a;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--cream); }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace; }
+button { font: inherit; }
+.dot-text { letter-spacing: .08em; text-transform: uppercase; }
+.scene-shell { background: radial-gradient(circle at 50% 18%, rgba(255,255,255,.28), transparent 34%), var(--cream); }
+.grain { pointer-events: none; background-image: radial-gradient(rgba(43,42,38,.14) .5px, transparent .5px); background-size: 5px 5px; mix-blend-mode: multiply; opacity: .2; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
