@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 type Caption = { text: string; start: number; end: number };
+type TimedWord = { text?: string; word?: string; start: number; end: number };
 type AudioProps = { projectName: string; narration: string; endLine: string; endingTail: number; duration?: number; captions?: Caption[] };
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -91,12 +92,12 @@ function transcribeCaptions(file: string): Caption[] {
     try {
       const output = `${result.stdout}\n${result.stderr ?? ""}`;
       const records = output.trim().split("\n").filter(line => line.trim().startsWith("{" )).map(line => JSON.parse(line));
-      const timed = records.flatMap(record => Array.isArray(record.words) ? record.words : []).filter((item: any) => item && typeof item.start === "number" && typeof item.end === "number");
+      const timed = records.flatMap(record => Array.isArray(record.words) ? record.words as TimedWord[] : []).filter(item => item && typeof item.start === "number" && typeof item.end === "number");
       if (timed.length) {
         const captions: Caption[] = [];
         for (let i = 0; i < timed.length; i += 5) {
           const group = timed.slice(i, i + 5);
-          captions.push({ text: group.map((item: any) => String(item.text ?? item.word).trim()).join(" "), start: group[0].start, end: group[group.length - 1].end });
+          captions.push({ text: group.map(item => String(item.text ?? item.word).trim()).join(" "), start: group[0].start, end: group[group.length - 1].end });
         }
         return captions;
       }

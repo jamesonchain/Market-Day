@@ -68,17 +68,33 @@
       "hash": "49e23aca1aa74e1e0c2f11aef2a5e0a137c1cff86c904d051aa7bddb23d1fc49",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/49/49e23aca1aa74e1e0c2f11aef2a5e0a137c1cff86c904d051aa7bddb23d1fc49"
     },
-    "compositions/final-outro.source": {
-      "hash": "440509800995dd0c8c71dce3e256d14c626c006058fccfa0b0bd3410467709cb",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/44/440509800995dd0c8c71dce3e256d14c626c006058fccfa0b0bd3410467709cb"
-    },
     "compositions/final-outro.html": {
       "hash": "2f231bc1ba11a20706a32683a700c5e15dc50202ef4d8e91ceaeb41be1865c0e",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/2f/2f231bc1ba11a20706a32683a700c5e15dc50202ef4d8e91ceaeb41be1865c0e"
     },
+    "compositions/final-outro.source": {
+      "hash": "440509800995dd0c8c71dce3e256d14c626c006058fccfa0b0bd3410467709cb",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/44/440509800995dd0c8c71dce3e256d14c626c006058fccfa0b0bd3410467709cb"
+    },
     "assets/audio/day-intro-narration.wav": {
       "hash": "f2379e4a19b2c96825e619b4563136d1767b4c3ac633f05804fe22222c3cf923",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/f2/f2379e4a19b2c96825e619b4563136d1767b4c3ac633f05804fe22222c3cf923"
+    },
+    "assets/audio/ambient-bed.wav": {
+      "hash": "5cf579daedb11fe8450cfdcedf458c7e351e2c1de30138be17ebaa4990c13ba3",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/5c/5cf579daedb11fe8450cfdcedf458c7e351e2c1de30138be17ebaa4990c13ba3"
+    },
+    "assets/audio/blocked-moment-narration.wav": {
+      "hash": "b1541179bf3b4e07d877e45639055419c3c453f1f4451d3b4e57c9087d17ede0",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/b1/b1541179bf3b4e07d877e45639055419c3c453f1f4451d3b4e57c9087d17ede0"
+    },
+    "assets/audio/blocked-tag.wav": {
+      "hash": "a2721de08c7f9b183f00a310deac583744202392cafc93308b5cdee606426ad1",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/a2/a2721de08c7f9b183f00a310deac583744202392cafc93308b5cdee606426ad1"
+    },
+    "assets/audio/final-outro-narration.wav": {
+      "hash": "6d0447dfec5ac5217afa78c3e1837ecde17567c308a9e55b8c72b98428dbee3f",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/6d/6d0447dfec5ac5217afa78c3e1837ecde17567c308a9e55b8c72b98428dbee3f"
     },
     "assets/audio/lower-third-narration.wav": {
       "hash": "4b3de450467f47f792eea699d7b708cdd2c309fd58ef3f49031bb79738a88d02",
@@ -88,29 +104,13 @@
       "hash": "886e7f601d64810ca25fd0f925e5c2e3924af4a42168a7c8ef0b7b017484ad6a",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/88/886e7f601d64810ca25fd0f925e5c2e3924af4a42168a7c8ef0b7b017484ad6a"
     },
-    "assets/audio/blocked-moment-narration.wav": {
-      "hash": "b1541179bf3b4e07d877e45639055419c3c453f1f4451d3b4e57c9087d17ede0",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/b1/b1541179bf3b4e07d877e45639055419c3c453f1f4451d3b4e57c9087d17ede0"
-    },
-    "assets/audio/final-outro-narration.wav": {
-      "hash": "6d0447dfec5ac5217afa78c3e1837ecde17567c308a9e55b8c72b98428dbee3f",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/6d/6d0447dfec5ac5217afa78c3e1837ecde17567c308a9e55b8c72b98428dbee3f"
-    },
-    "assets/audio/ambient-bed.wav": {
-      "hash": "5cf579daedb11fe8450cfdcedf458c7e351e2c1de30138be17ebaa4990c13ba3",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/5c/5cf579daedb11fe8450cfdcedf458c7e351e2c1de30138be17ebaa4990c13ba3"
-    },
-    "assets/audio/title-reveal.wav": {
-      "hash": "5734965bc53d2e4bd782cf120e09bde8390c9b6cf3768b79ad2d58d3c8bcbdb2",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/57/5734965bc53d2e4bd782cf120e09bde8390c9b6cf3768b79ad2d58d3c8bcbdb2"
-    },
     "assets/audio/stat-number.wav": {
       "hash": "e73ebfe132829f05dd8cb73742c08b3ab7d9035a1b02e24c84c1ee5be5b90d3d",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/e7/e73ebfe132829f05dd8cb73742c08b3ab7d9035a1b02e24c84c1ee5be5b90d3d"
     },
-    "assets/audio/blocked-tag.wav": {
-      "hash": "a2721de08c7f9b183f00a310deac583744202392cafc93308b5cdee606426ad1",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/a2/a2721de08c7f9b183f00a310deac583744202392cafc93308b5cdee606426ad1"
+    "assets/audio/title-reveal.wav": {
+      "hash": "5734965bc53d2e4bd782cf120e09bde8390c9b6cf3768b79ad2d58d3c8bcbdb2",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/57/5734965bc53d2e4bd782cf120e09bde8390c9b6cf3768b79ad2d58d3c8bcbdb2"
     },
     "AGENTS.md": {
       "hash": "85e4a17d9b16f703287bb1563fc4f5bdb999b654c6f9e841901d39b214eb0890",
@@ -144,13 +144,13 @@
       "hash": "bb1b2143fcfe1087f14a5d3594f84b18b6111a421b5e1036955810b2a31c7af4",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/bb/bb1b2143fcfe1087f14a5d3594f84b18b6111a421b5e1036955810b2a31c7af4"
     },
-    "compositions/final-outro.props.json": {
-      "hash": "8a3d77cf171ebf22bf0799f6c82c0d7b64f57a91b888d7c1b7e26c8daf83fc40",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/8a/8a3d77cf171ebf22bf0799f6c82c0d7b64f57a91b888d7c1b7e26c8daf83fc40"
-    },
     "compositions/audio.props.json": {
       "hash": "897efc1b65dae21cb42663fb335f513fbadf2466507823b9a73ef45e36fe5f2f",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/89/897efc1b65dae21cb42663fb335f513fbadf2466507823b9a73ef45e36fe5f2f"
+    },
+    "compositions/final-outro.props.json": {
+      "hash": "8a3d77cf171ebf22bf0799f6c82c0d7b64f57a91b888d7c1b7e26c8daf83fc40",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/8a/8a3d77cf171ebf22bf0799f6c82c0d7b64f57a91b888d7c1b7e26c8daf83fc40"
     },
     "scripts/build-video-props.mjs": {
       "hash": "9c78c4c714c5d0930268a23922b0f77d163f514dff551099e46db6c36cf162d7",
@@ -168,17 +168,17 @@
       "hash": "af4102e95a9bf2e21a4a0ce6f29851cadf4ea7aa89f45d1c4c3a23d2d5026000",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/af/af4102e95a9bf2e21a4a0ce6f29851cadf4ea7aa89f45d1c4c3a23d2d5026000"
     },
-    "assets/audio/transcript.json": {
-      "hash": "36e0efa6b3ddf0478dce04adc5217b614c7d6479bcb125aa957cc169a12949c6",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/36/36e0efa6b3ddf0478dce04adc5217b614c7d6479bcb125aa957cc169a12949c6"
+    "assets/audio/marketday-final-audio.wav": {
+      "hash": "63993e468c80164068ab31f6b3d4f8ab9bfcd0906edc26f983dfed446a2fca48",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/63/63993e468c80164068ab31f6b3d4f8ab9bfcd0906edc26f983dfed446a2fca48"
     },
     "assets/audio/marketday-music.wav": {
       "hash": "437750e6fc206a460214ae9891f2e4cac5d121db2c80d210de28326c531c0be5",
       "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/43/437750e6fc206a460214ae9891f2e4cac5d121db2c80d210de28326c531c0be5"
     },
-    "assets/audio/marketday-final-audio.wav": {
-      "hash": "63993e468c80164068ab31f6b3d4f8ab9bfcd0906edc26f983dfed446a2fca48",
-      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/63/63993e468c80164068ab31f6b3d4f8ab9bfcd0906edc26f983dfed446a2fca48"
+    "assets/audio/transcript.json": {
+      "hash": "36e0efa6b3ddf0478dce04adc5217b614c7d6479bcb125aa957cc169a12949c6",
+      "content": "/Users/jamespeters/.cache/hyperframes/history/cc566e76-d9d3-4513-a1cb-50bb68766f00/blobs/36/36e0efa6b3ddf0478dce04adc5217b614c7d6479bcb125aa957cc169a12949c6"
     },
     "out/transcript.json": {
       "hash": "3ab133a8f7cfdab6a969ee09c67cd21489941548b33517b784f8c491b833d301",
@@ -2090,15 +2090,15 @@
   },
   "renders": {
     "latest": {
-      "id": "074a2ba0-b0fd-4614-ad04-6d8aaf8fb31e",
-      "completedAt": 1793698202816,
-      "output": "/Users/jamespeters/Documents/Market-Day/marketday-videos/out/day-intro-silent.mp4",
+      "id": "7c0ef825-013e-46eb-9a14-a1c65eb5829c",
+      "completedAt": 1793698997909,
+      "output": "/Users/jamespeters/Documents/Market-Day/marketday-videos/renders/marketday-videos_2026-11-03_10-43-07.mp4",
       "status": "completed",
-      "revision": "7e1cbc01-2b3f-499e-beb8-25e8c2338bca"
+      "revision": "8ddf4b47-1a63-46ca-b934-d3c820eca401"
     },
     "retainedRevisions": [
-      "7e1cbc01-2b3f-499e-beb8-25e8c2338bca",
-      "a8b5fd3b-2630-4ac5-8998-ca16963e189f"
+      "8ddf4b47-1a63-46ca-b934-d3c820eca401",
+      "7e1cbc01-2b3f-499e-beb8-25e8c2338bca"
     ]
   },
   "pendingArtifactCleanup": []
