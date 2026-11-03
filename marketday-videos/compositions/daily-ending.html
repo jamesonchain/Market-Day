@@ -28,10 +28,10 @@
   </style>
   <div id="root" data-composition-id="daily-ending" data-width="1080" data-height="1350">
     <div id="ending-copy" class="ending-copy clip" data-start="0" data-duration="3"><h1 id="ending-title" class="ending-title display"></h1><p id="ending-line" class="ending-line body"></p></div><div id="ending-horizon" class="ending-horizon clip" data-start="0" data-duration="3"></div>
-    <div id="daily-ending-captions" data-track-kind="captions"></div> 
+
   </div>
   <script>
-    const props = {"title":"Marketday","endLine":"Day 2 tomorrow: the first trade."};
+    const props = {"title":"Marketday","endLine":"Coming soon."};
     document.querySelector("#ending-title").textContent = props.title;
     document.querySelector("#ending-line").textContent = props.endLine;
     const tl = gsap.timeline({ paused: true });

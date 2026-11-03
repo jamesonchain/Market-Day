@@ -23,7 +23,7 @@
   <body>
     <main id="root" data-composition-id="main" data-start="0" data-duration="__DAILY_DURATION__" data-width="__WIDTH__" data-height="__HEIGHT__">
       <div id="daily-sky" class="daily-sky"></div><div id="daily-cloud-a" class="daily-cloud daily-cloud-a"></div><div id="daily-cloud-b" class="daily-cloud daily-cloud-b"></div>
-      __ROOT_AUDIO__
+      __CAPTIONS__
       <div id="day-intro" class="scene-host" data-composition-id="day-intro" data-composition-src="compositions/day-intro.html" data-start="0" data-duration="__DAY_DURATION__" data-track-index="0" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
       <div id="lower-third" class="scene-host" data-composition-id="lower-third" data-composition-src="compositions/lower-third.html" data-start="__LOWER_START__" data-duration="__LOWER_DURATION__" data-track-index="1" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
       <div id="stat-card" class="scene-host" data-composition-id="stat-card" data-composition-src="compositions/stat-card.html" data-start="__STAT_START__" data-duration="__STAT_DURATION__" data-track-index="2" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>

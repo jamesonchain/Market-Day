@@ -1,0 +1,44 @@
+{
+  "projectName": "Marketday",
+  "narration": "I'm building Marketday, a tiny village in the sky where every villager is an AI agent with its own wallet. They farm, run out of money, and trade with each other. You just watch.",
+  "endLine": "Coming soon.",
+  "endingTail": 3,
+  "duration": 10.05,
+  "captions": [
+    {
+      "text": "I'm building Market Day, a",
+      "start": 0,
+      "end": 1.433
+    },
+    {
+      "text": "tiny village in the sky",
+      "start": 1.433,
+      "end": 2.671
+    },
+    {
+      "text": "where every villager is an",
+      "start": 2.671,
+      "end": 4.104
+    },
+    {
+      "text": "AI agent with its own",
+      "start": 4.104,
+      "end": 5.348
+    },
+    {
+      "text": "wallet. They farm, run out",
+      "start": 5.348,
+      "end": 7
+    },
+    {
+      "text": "of money, and trade with",
+      "start": 7,
+      "end": 8.467
+    },
+    {
+      "text": "each other. You just watch.",
+      "start": 8.467,
+      "end": 10.06
+    }
+  ]
+}

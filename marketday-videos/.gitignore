@@ -1,4 +1,5 @@
 node_modules/
 out/
 .thumbnails/
+.waveform-cache/
 .DS_Store

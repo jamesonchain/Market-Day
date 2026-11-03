@@ -1,0 +1,212 @@
+[
+  {
+    "text": "I'm",
+    "start": 0.01,
+    "end": 0.18,
+    "id": "w0"
+  },
+  {
+    "text": "building",
+    "start": 0.21,
+    "end": 0.71,
+    "id": "w1"
+  },
+  {
+    "text": "Market",
+    "start": 0.71,
+    "end": 1.09,
+    "id": "w2"
+  },
+  {
+    "text": "Day,",
+    "start": 1.09,
+    "end": 1.4,
+    "id": "w3"
+  },
+  {
+    "text": "a",
+    "start": 1.41,
+    "end": 1.46,
+    "id": "w4"
+  },
+  {
+    "text": "tiny",
+    "start": 1.46,
+    "end": 1.72,
+    "id": "w5"
+  },
+  {
+    "text": "village",
+    "start": 1.72,
+    "end": 2.18,
+    "id": "w6"
+  },
+  {
+    "text": "in",
+    "start": 2.18,
+    "end": 2.31,
+    "id": "w7"
+  },
+  {
+    "text": "the",
+    "start": 2.31,
+    "end": 2.41,
+    "id": "w8"
+  },
+  {
+    "text": "sky",
+    "start": 2.54,
+    "end": 2.72,
+    "id": "w9"
+  },
+  {
+    "text": "where",
+    "start": 2.72,
+    "end": 2.96,
+    "id": "w10"
+  },
+  {
+    "text": "every",
+    "start": 2.96,
+    "end": 3.29,
+    "id": "w11"
+  },
+  {
+    "text": "villager",
+    "start": 3.29,
+    "end": 3.81,
+    "id": "w12"
+  },
+  {
+    "text": "is",
+    "start": 3.81,
+    "end": 3.94,
+    "id": "w13"
+  },
+  {
+    "text": "an",
+    "start": 3.94,
+    "end": 4.07,
+    "id": "w14"
+  },
+  {
+    "text": "AI",
+    "start": 4.07,
+    "end": 4.2,
+    "id": "w15"
+  },
+  {
+    "text": "agent",
+    "start": 4.2,
+    "end": 4.51,
+    "id": "w16"
+  },
+  {
+    "text": "with",
+    "start": 4.57,
+    "end": 4.88,
+    "id": "w17"
+  },
+  {
+    "text": "its",
+    "start": 4.88,
+    "end": 5.12,
+    "id": "w18"
+  },
+  {
+    "text": "own",
+    "start": 5.12,
+    "end": 5.27,
+    "id": "w19"
+  },
+  {
+    "text": "wallet.",
+    "start": 5.35,
+    "end": 5.9,
+    "id": "w20"
+  },
+  {
+    "text": "They",
+    "start": 5.91,
+    "end": 6.16,
+    "id": "w21"
+  },
+  {
+    "text": "farm,",
+    "start": 6.16,
+    "end": 6.55,
+    "id": "w22"
+  },
+  {
+    "text": "run",
+    "start": 6.55,
+    "end": 6.75,
+    "id": "w23"
+  },
+  {
+    "text": "out",
+    "start": 6.75,
+    "end": 6.95,
+    "id": "w24"
+  },
+  {
+    "text": "of",
+    "start": 6.95,
+    "end": 7.07,
+    "id": "w25"
+  },
+  {
+    "text": "money,",
+    "start": 7.07,
+    "end": 7.54,
+    "id": "w26"
+  },
+  {
+    "text": "and",
+    "start": 7.54,
+    "end": 7.74,
+    "id": "w27"
+  },
+  {
+    "text": "trade",
+    "start": 7.74,
+    "end": 8.06,
+    "id": "w28"
+  },
+  {
+    "text": "with",
+    "start": 8.06,
+    "end": 8.31,
+    "id": "w29"
+  },
+  {
+    "text": "each",
+    "start": 8.44,
+    "end": 8.59,
+    "id": "w30"
+  },
+  {
+    "text": "other.",
+    "start": 8.59,
+    "end": 9.2,
+    "id": "w31"
+  },
+  {
+    "text": "You",
+    "start": 9.21,
+    "end": 9.38,
+    "id": "w32"
+  },
+  {
+    "text": "just",
+    "start": 9.41,
+    "end": 9.69,
+    "id": "w33"
+  },
+  {
+    "text": "watch.",
+    "start": 9.69,
+    "end": 10.06,
+    "id": "w34"
+  }
+]

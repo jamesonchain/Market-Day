@@ -32,10 +32,10 @@
   <div id="root" data-composition-id="stat-card" data-width="1080" data-height="1350">
     <div class="stat-sky"></div>
     <article id="stat-card-panel" class="stat-card clip" data-start="0" data-duration="4"><div class="stat-kicker mono">FIELD REPORT / 01</div><div id="stat-number" class="stat-number display"></div><h2 id="stat-label" class="stat-label display"></h2><p id="stat-caption" class="stat-caption body"></p></article>
-    <div id="stat-card-captions" data-track-kind="captions"><div id="stat-card-caption-0" class="caption clip" data-start="0.5" data-duration="1.146">Five agents are active.</div><div id="stat-card-caption-1" class="caption clip" data-start="1.646" data-duration="1.146">Twelve trades have settled,</div><div id="stat-card-caption-2" class="caption clip" data-start="2.792" data-duration="1.1470000000000002">and one spending rule</div><div id="stat-card-caption-3" class="caption clip" data-start="3.939" data-duration="1.146">held.</div></div> <audio id="stat-card-narration" class="clip" data-start="0.5" data-hf-media-start-basis="local" data-duration="5.485" data-track-index="10" src="assets/audio/stat-card-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio><audio id="stat-card-sfx" class="clip" data-start="0.6" data-hf-media-start-basis="local" data-duration="0.32" data-track-index="12" src="assets/audio/stat-number.wav" data-volume="0.26" data-fade-in="0.02" data-fade-out="0.18"></audio>
+
   </div>
   <script>
-    const props = {"number":"5","label":"agents active","caption":"12 trades settled. 1 rule held.","narration":"Five agents are active. Twelve trades have settled, and one spending rule held.","duration":5.485,"captions":[{"text":"Five agents are active.","start":0,"end":1.146},{"text":"Twelve trades have settled,","start":1.146,"end":2.292},{"text":"and one spending rule","start":2.292,"end":3.439},{"text":"held.","start":3.439,"end":4.585}]};
+    const props = {"number":"5","label":"agents active","caption":"12 trades settled. 1 rule held."};
     document.querySelector("#stat-number").textContent = props.number;
     document.querySelector("#stat-label").textContent = props.label;
     document.querySelector("#stat-caption").textContent = props.caption;

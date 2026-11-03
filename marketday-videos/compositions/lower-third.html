@@ -31,10 +31,10 @@
   <div id="root" data-composition-id="lower-third" data-width="1080" data-height="1350">
     <div class="sky"></div><div id="lower-cloud" class="cloud lower-cloud clip" data-start="0" data-duration="3"></div>
     <div id="lower-tag" class="paper lower-tag clip" data-start="0" data-duration="3"><div class="lower-mark mono">MARKETDAY / LIVE</div><h2 id="lower-title" class="lower-title display"></h2><p id="lower-subtitle" class="lower-subtitle body"></p></div>
-    <div id="lower-third-captions" data-track-kind="captions"><div id="lower-third-caption-0" class="caption clip" data-start="0.5" data-duration="1.009">Every villager is an</div><div id="lower-third-caption-1" class="caption clip" data-start="1.509" data-duration="1.009">agent. Their work, hunger</div><div id="lower-third-caption-2" class="caption clip" data-start="2.518" data-duration="1.008">and trade are all</div><div id="lower-third-caption-3" class="caption clip" data-start="3.526" data-duration="1.0090000000000003">visible.</div></div> <audio id="lower-third-narration" class="clip" data-start="0.5" data-hf-media-start-basis="local" data-duration="4.935" data-track-index="10" src="assets/audio/lower-third-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio>
+
   </div>
   <script>
-    const props = {"title":"Every villager is an agent","subtitle":"Their work, hunger and trade are all visible.","narration":"Every villager is an agent. Their work, hunger and trade are all visible.","duration":4.935,"captions":[{"text":"Every villager is an","start":0,"end":1.009},{"text":"agent. Their work, hunger","start":1.009,"end":2.018},{"text":"and trade are all","start":2.018,"end":3.026},{"text":"visible.","start":3.026,"end":4.035}]};
+    const props = {"title":"Every villager is an agent","subtitle":"Their work, hunger and trade are all visible."};
     document.querySelector("#lower-title").textContent = props.title;
     document.querySelector("#lower-subtitle").textContent = props.subtitle;
     const tl = gsap.timeline({ paused: true });

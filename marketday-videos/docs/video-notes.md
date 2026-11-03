@@ -1,36 +1,23 @@
 # Marketday video notes
 
-## Audio and media inventory
+## Render contract
 
-The daily root is `index.html`.
+HyperFrames renders visual compositions only. The generated `index.html` and every generated file under `compositions/` contain zero audio elements and zero video elements. The build script scans those files and fails if either tag appears. There are no video layers. If a video layer is added later, it must be muted.
 
-- `#daily-music-bed` is the only root audio element. It runs from frame 0 to the end and uses `assets/audio/ambient-bed.wav`.
-- `#day-intro-narration` and `#day-intro-sfx` are in `compositions/day-intro.html`.
-- `#lower-third-narration` is in `compositions/lower-third.html`.
-- `#stat-card-narration` and `#stat-card-sfx` are in `compositions/stat-card.html`.
-- `#blocked-moment-narration` and `#blocked-moment-sfx` are in `compositions/blocked-moment.html`.
-- `daily-ending.html` has no audio. It is the three second visual end beat.
-- `final-outro.html` is a separate standalone composition with `#final-outro-narration` and `#final-outro-bed`.
-- There are no video or screen recording elements. No mute attribute is needed.
+The silent render reported `videoCount: 0` and `audioCount: 0`. Visual scene overlap remains enabled, but scenes cannot carry audio.
 
-The nested daily scenes do not include the root music bed. The root owns one continuous bed. The standalone final outro owns its own bed because it is rendered independently.
+## Single audio pipeline
 
-## Echo check
+`scripts/build-audio.ts` reads `compositions/audio.props.json` and makes one TTS call for the complete narration. It writes one mono narration file, one generated music bed, and one final mixed mono WAV. The music bed has no voice source. The final mix uses a 0.4 second fade in, a 1.5 second fade out, sidechain ducking under the narration, and loudness normalization near -14 LUFS.
 
-The daily narration appears once per scene, with one unique local start time. The daily scene hosts use a 0.5 second visual overlap, but later narration starts after that overlap so speech does not overlap. `scripts/narrate.ts` processes each named props file once and writes one narration WAV per name. It does not process the root or generate a second narration pass.
+The local render used one macOS voice call because Kokoro was not installed. The local HyperFrames Whisper pass supplied word timings for the captions. The captions are stored in the audio props file and mounted once by the root visual composition.
 
-The narration files are converted to mono with `-ac 1`, which centers the voice. The ambient bed is made by deterministic oscillator code in `scripts/narrate.ts`. It contains no voice recording or speech sample.
+The ending uses the props value `Coming soon.` and keeps the dusk gradient visible for a three second tail. The project name is also stored in the audio props file.
 
-For the final render, the first two seconds were compared with copies delayed by 20 ms, 60 ms and 120 ms using an ffmpeg residual mix. Residual RMS levels were -45.77 dB, -44.65 dB and -27.26 dB respectively, with the 120 ms comparison crossing a speech boundary. No doubled voice pattern was found in the residual checks. The final file has exactly one audio stream, with duration 33.200 seconds.
+## Verification
 
-## Mix and transitions
+The silent HyperFrames render was muxed with `scripts/mux-audio.mjs`. ffprobe verified exactly one AAC audio stream, with video duration 13.050 seconds and audio duration 13.050 seconds. The final audio is mono.
 
-The dusk gradient and cloud layer live at the root and continue through every scene. Each scene fades in and out with a shared upward motion, with about 0.5 seconds of overlap and no blank frame.
+Speech to text was run on the final MP4 audio. All three narration sentences were found exactly once. This is the doubled voice check for the new single-track design.
 
-The root bed has a 0.4 second fade in and 1.5 second fade out. Automation reduces it to about 9 dB below its base level during speech, with 0.2 second attack and 0.6 second release. Short effects are limited to the title reveal, stat number and blocked tag.
-
-The rendered daily mix measured -14.3 LUFS integrated and -1.7 dBTP input true peak. A verification pass measured -14.1 LUFS output integrated and -1.5 dBTP output true peak. There is no clipping.
-
-## Ending
-
-The daily set ends with a three second visual beat on the dusk gradient. Its end line comes from props and currently reads `Day 2 tomorrow: the first trade.` The day intro narration ends with the same message. `final-outro` remains separate and keeps the repository and live demo URLs.
+The old per-scene narration, scene music and scene effects are no longer referenced by any composition. No day labels or relative date words remain in compositions, props, generated HTML or the narration props.
