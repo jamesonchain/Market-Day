@@ -2,27 +2,27 @@
   "title": "Every villager is an agent",
   "subtitle": "Their work, hunger and trade are all visible.",
   "narration": "Every villager is an agent. Their work, hunger and trade are all visible.",
-  "duration": 4.095,
+  "duration": 4.935,
   "captions": [
     {
       "text": "Every villager is an",
       "start": 0,
-      "end": 1.024
+      "end": 1.009
     },
     {
       "text": "agent. Their work, hunger",
-      "start": 1.024,
-      "end": 2.047
+      "start": 1.009,
+      "end": 2.018
     },
     {
       "text": "and trade are all",
-      "start": 2.047,
-      "end": 3.071
+      "start": 2.018,
+      "end": 3.026
     },
     {
       "text": "visible.",
-      "start": 3.071,
-      "end": 4.095
+      "start": 3.026,
+      "end": 4.035
     }
   ]
 }

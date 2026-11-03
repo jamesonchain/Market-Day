@@ -1,27 +1,27 @@
 {
   "reason": "Price 3x above fair. Blocked.",
   "narration": "This trade is three times above a fair price. The spending rule blocks it.",
-  "duration": 3.981,
+  "duration": 4.821,
   "captions": [
     {
       "text": "This trade is three",
       "start": 0,
-      "end": 0.995
+      "end": 0.98
     },
     {
       "text": "times above a fair",
-      "start": 0.995,
-      "end": 1.99
+      "start": 0.98,
+      "end": 1.96
     },
     {
       "text": "price. The spending rule",
-      "start": 1.99,
-      "end": 2.986
+      "start": 1.96,
+      "end": 2.941
     },
     {
       "text": "blocks it.",
-      "start": 2.986,
-      "end": 3.981
+      "start": 2.941,
+      "end": 3.921
     }
   ]
 }

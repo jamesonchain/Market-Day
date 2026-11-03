@@ -15,6 +15,19 @@ function durationOf(file: string) {
   return Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", file], { encoding: "utf8" }).trim());
 }
 
+function polishVoice(file: string) {
+  const rawDuration = durationOf(file);
+  const trimStart = 0.06;
+  const tail = 0.9;
+  const speechDuration = Math.max(0.2, rawDuration - trimStart);
+  const finalDuration = speechDuration + tail;
+  const temp = `${file}.polished.wav`;
+  const filter = `atrim=start=${trimStart},asetpts=PTS-STARTPTS,highpass=f=85,lowpass=f=11500,acompressor=threshold=-24dB:ratio=2:attack=20:release=160:makeup=1,afade=t=in:st=0:d=0.08,apad=pad_dur=${tail},afade=t=out:st=${Math.max(0, speechDuration - 0.12)}:d=${tail}`;
+  execFileSync("ffmpeg", ["-y", "-i", file, "-af", filter, "-t", finalDuration.toFixed(3), "-ar", "44100", "-ac", "1", temp], { stdio: "ignore" });
+  execFileSync("mv", [temp, file]);
+  return { speechDuration: Number(speechDuration.toFixed(3)), finalDuration: Number(finalDuration.toFixed(3)) };
+}
+
 function wav(file: string, seconds: number, tone: (t: number) => number, volume = 0.2) {
   const rate = 44100;
   const count = Math.max(1, Math.floor(seconds * rate));
@@ -85,9 +98,9 @@ for (const name of names) {
       runSystemPreviewVoice(props.narration, voiceFile);
     }
   }
-  const duration = Number(durationOf(voiceFile).toFixed(3));
-  props.duration = duration;
-  props.captions = captions(props.narration, duration);
+  const polished = polishVoice(voiceFile);
+  props.duration = polished.finalDuration;
+  props.captions = captions(props.narration, polished.speechDuration);
   await writeFile(propsFile, `${JSON.stringify(props, null, 2)}\n`);
 }
 
