@@ -1,5 +1,5 @@
-import VillageScene from "@/components/village-scene";
+import FloatingIslandDiorama from "@/components/floating-island";
 
 export default function Home() {
-  return <main className="min-h-screen"><VillageScene /></main>;
+  return <FloatingIslandDiorama />;
 }

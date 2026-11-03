@@ -1,5 +1,5 @@
-import VillageScene from "@/components/village-scene";
+import FloatingIslandDiorama from "@/components/floating-island";
 
 export default function RecordPage() {
-  return <main className="min-h-screen"><VillageScene recordMode /></main>;
+  return <FloatingIslandDiorama recordMode />;
 }

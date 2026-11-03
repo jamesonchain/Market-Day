@@ -7,7 +7,7 @@ The demo goal is invisible infrastructure: the chain is real underneath, while t
 ## Current implementation
 
 - Stage 1: Next.js App Router + TypeScript + Tailwind foundations, environment contract, and NEAR capability notes.
-- Stage 2: PixiJS dot-matrix village renderer with parallax, camera drift, trees, four buildings, and day/night palette changes.
+- Stage 2: React Three Fiber floating island diorama with procedural buildings, trees, clouds, camera descent, and a day to night palette cycle.
 - NEAR Intents settlement is represented by an explicit adapter boundary. On testnet, the UI labels this as `DEMO LEDGER` because Intents solvers are mainnet-only. The real adapter can be connected for mainnet without changing scene code.
 - Stage 3 to 10: server-side NEAR adapters, 1Click dry quotes, agent ticks, SSE, spending leash, market animation, observer login, replayable story beat, Supabase persistence boundary, visual tour, record mode, and Vercel cron configuration.
 
@@ -15,7 +15,7 @@ The demo goal is invisible infrastructure: the chain is real underneath, while t
 
 ```mermaid
 flowchart LR
-  Visitor[Observer browser] --> Scene[Pixi or Canvas scene]
+  Visitor[Observer browser] --> Scene[React Three Fiber or static canvas scene]
   Scene --> Events[SSE /api/events]
   Scene --> Tick[POST /api/tick or Demo]
   Cron[Vercel Cron] --> Tick

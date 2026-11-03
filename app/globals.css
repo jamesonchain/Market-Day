@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
-:root {
-  --cream: #e9e2d0;
-  --paper: #f4efe3;
-  --ink: #2b2a26;
-  --muted: #777265;
-  --blue: #2a5bb5;
-  --blue-bright: #4d83e8;
-  --rust: #b86443;
-  --sage: #80977a;
-}
-
+:root { --clay: #E9D8C4; --coral: #E8654F; --grass: #7FA86B; --teal: #1D4E5A; --gold: #F6B93B; --ink: #14172B; --soft: #FFF6EA; --vermilion: #FF3D2E; }
 * { box-sizing: border-box; }
-html { background: var(--cream); }
-body { margin: 0; background: var(--cream); color: var(--ink); font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace; }
-button { font: inherit; }
-.dot-text { letter-spacing: .08em; text-transform: uppercase; }
-.scene-shell { background: radial-gradient(circle at 50% 18%, rgba(255,255,255,.28), transparent 34%), var(--cream); }
-.scene-shell.is-night { --ink: #f4efe3; --muted: #d2cbbd; --paper: #65759b; background: radial-gradient(circle at 50% 18%, rgba(129,153,210,.32), transparent 34%), #5b6f9a; }
-.grain { pointer-events: none; background-image: radial-gradient(rgba(43,42,38,.14) .5px, transparent .5px); background-size: 5px 5px; mix-blend-mode: multiply; opacity: .2; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+html, body { margin: 0; min-height: 100%; background: #141631; }
+body { color: var(--soft); font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
+button, a { font: inherit; }
+.diorama-page { isolation: isolate; }
+.diorama-sky { background: linear-gradient(180deg, #141631 0%, #4B3A7A 42%, #E8718D 75%, #FFB38A 100%); }
+.diorama-sky::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 88%, rgba(255,246,234,.2), transparent 32%), linear-gradient(90deg, rgba(20,22,49,.18), transparent 30%, transparent 70%, rgba(20,22,49,.2)); }
+.diorama-stage { min-height: 610px; border-radius: 30px; background: linear-gradient(180deg, rgba(75,58,122,.2), rgba(255,179,138,.08)); box-shadow: inset 0 1px 0 rgba(255,246,234,.14); }
+.record-stage { min-height: calc(100vh - 1.5rem); margin: .75rem; border-radius: 32px; }
+.diorama-header, .diorama-footer { position: relative; z-index: 12; }
+.diorama-kicker { color: var(--gold); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+.diorama-title { color: var(--soft); font-family: "Bricolage Grotesque", ui-sans-serif, sans-serif; font-size: clamp(2.5rem, 6vw, 5.6rem); font-weight: 700; letter-spacing: -.07em; line-height: .9; max-width: 720px; }
+.diorama-subtitle { color: rgba(255,246,234,.76); font-size: clamp(.85rem, 1.2vw, 1rem); max-width: 370px; }
+.diorama-pill { border: 1px solid rgba(255,246,234,.26); border-radius: 999px; background: rgba(20,23,43,.2); color: var(--soft); padding: 8px 12px; font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(6px); }
+.diorama-pill:hover { background: rgba(255,246,234,.16); }
+.diorama-status, .diorama-feed, .diorama-loading { position: absolute; z-index: 11; font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .05em; text-transform: uppercase; }
+.diorama-status { bottom: 18px; left: 22px; display: flex; align-items: center; gap: 8px; color: rgba(255,246,234,.84); }
+.diorama-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+.diorama-renderer { color: rgba(255,246,234,.5); margin-left: 8px; }
+.diorama-feed { right: 22px; bottom: 18px; width: min(270px, 38vw); color: rgba(255,246,234,.72); line-height: 1.65; text-align: right; }
+.diorama-feed span { color: var(--gold); }
+.diorama-feed small { color: rgba(255,246,234,.45); }
+.diorama-loading { left: 50%; top: 52%; transform: translate(-50%, -50%); color: rgba(255,246,234,.68); transition: opacity .8s ease; }
+.diorama-loading[data-hidden="true"] { opacity: 0; pointer-events: none; }
+@media (max-width: 700px) { .diorama-stage { min-height: 560px; margin: 0 .75rem; border-radius: 24px; } .record-stage { min-height: calc(100vh - 1.5rem); } .diorama-header { padding: 1.2rem 1rem; } .diorama-title { font-size: clamp(2.5rem, 14vw, 4.2rem); max-width: 280px; } .diorama-subtitle { max-width: 240px; } .diorama-header .diorama-pill:first-child { display: none; } .diorama-feed { right: 14px; bottom: 48px; width: 180px; font-size: 8px; } .diorama-status { left: 14px; bottom: 15px; font-size: 8px; } .diorama-renderer { display: none; } .diorama-footer { padding: 1rem; font-size: 9px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
