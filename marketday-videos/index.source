@@ -11,18 +11,31 @@
       #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
       [data-composition-src] { position: absolute; inset: 0; }
       .scene-host { pointer-events: none; }
+      .daily-sky { position: absolute; inset: 0; background: linear-gradient(180deg, #141631 0%, #4B3A7A 38%, #E8718D 73%, #FFB38A 100%); }
+      .daily-cloud { position: absolute; width: 330px; height: 78px; border-radius: 100px; background: rgba(255,246,234,.16); filter: blur(14px); z-index: 1; }
+      .daily-cloud:before, .daily-cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+      .daily-cloud:before { width: 130px; height: 130px; left: 62px; bottom: 12px; }
+      .daily-cloud:after { width: 180px; height: 180px; right: 28px; bottom: 4px; }
+      .daily-cloud-a { top: 25%; left: -8%; }
+      .daily-cloud-b { top: 43%; right: -12%; transform: scale(.72); opacity: .55; }
     </style>
   </head>
   <body>
     <main id="root" data-composition-id="main" data-start="0" data-duration="__DAILY_DURATION__" data-width="__WIDTH__" data-height="__HEIGHT__">
+      <div id="daily-sky" class="daily-sky"></div><div id="daily-cloud-a" class="daily-cloud daily-cloud-a"></div><div id="daily-cloud-b" class="daily-cloud daily-cloud-b"></div>
+      __ROOT_AUDIO__
       <div id="day-intro" class="scene-host" data-composition-id="day-intro" data-composition-src="compositions/day-intro.html" data-start="0" data-duration="__DAY_DURATION__" data-track-index="0" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
       <div id="lower-third" class="scene-host" data-composition-id="lower-third" data-composition-src="compositions/lower-third.html" data-start="__LOWER_START__" data-duration="__LOWER_DURATION__" data-track-index="1" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
       <div id="stat-card" class="scene-host" data-composition-id="stat-card" data-composition-src="compositions/stat-card.html" data-start="__STAT_START__" data-duration="__STAT_DURATION__" data-track-index="2" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
       <div id="blocked-moment" class="scene-host" data-composition-id="blocked-moment" data-composition-src="compositions/blocked-moment.html" data-start="__BLOCKED_START__" data-duration="__BLOCKED_DURATION__" data-track-index="3" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
+      <div id="daily-ending" class="scene-host" data-composition-id="daily-ending" data-composition-src="compositions/daily-ending.html" data-start="__ENDING_START__" data-duration="3" data-track-index="4" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
     </main>
     <script>
       window.__timelines = window.__timelines || {};
-      window.__timelines.main = gsap.timeline({ paused: true });
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#daily-cloud-a", { x: -80, opacity: 0 }, { x: 140, opacity: .44, duration: 1, ease: "none" }, 0);
+      tl.fromTo("#daily-cloud-b", { x: 100, opacity: 0 }, { x: -160, opacity: .3, duration: 1, ease: "none" }, 0);
+      window.__timelines.main = tl;
     </script>
   </body>
 </html>

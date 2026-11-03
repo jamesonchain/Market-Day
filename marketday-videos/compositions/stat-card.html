@@ -10,6 +10,7 @@
 .mono { font-family: "Geist Mono", "Space Mono", monospace; letter-spacing: .06em; }
 .clip { position: absolute; }
 .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, var(--violet) 38%, var(--rose) 73%, var(--horizon) 100%); }
+.sky, .stat-sky { opacity: 0; }
 .cloud { position: absolute; width: 330px; height: 78px; border-radius: 100px; background: rgba(255,246,234,.2); filter: blur(14px); }
 .cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
 .cloud:before { width: 130px; height: 130px; left: 62px; bottom: 12px; }
@@ -19,7 +20,7 @@
 .paper { border-radius: 34px; background: var(--paper); color: var(--ink); box-shadow: 0 18px 42px rgba(20,22,49,.2), inset 0 1px rgba(255,246,234,.65); }
 @media (prefers-reduced-motion: reduce) { .clip { animation: none !important; } }
 
-    #root { background: var(--horizon); }
+    #root { background: transparent; }
     .stat-sky { position: absolute; inset: 0; background: radial-gradient(circle at 70% 20%, rgba(255,246,234,.32), transparent 38%), linear-gradient(180deg, var(--rose), var(--horizon)); }
     .stat-card { left: 7%; top: 13%; width: 86%; height: 74%; padding: 72px 70px; background: var(--paper); border-radius: 44px; color: var(--ink); box-shadow: 0 24px 60px rgba(20,22,49,.22); }
     .stat-kicker { color: rgba(20,23,43,.62); font-size: 18px; }
@@ -31,7 +32,7 @@
   <div id="root" data-composition-id="stat-card" data-width="1080" data-height="1350">
     <div class="stat-sky"></div>
     <article id="stat-card-panel" class="stat-card clip" data-start="0" data-duration="4"><div class="stat-kicker mono">FIELD REPORT / 01</div><div id="stat-number" class="stat-number display"></div><h2 id="stat-label" class="stat-label display"></h2><p id="stat-caption" class="stat-caption body"></p></article>
-    <div id="stat-card-captions" data-track-kind="captions"><div id="stat-card-caption-0" class="caption clip" data-start="0" data-duration="1.146">Five agents are active.</div><div id="stat-card-caption-1" class="caption clip" data-start="1.146" data-duration="1.146">Twelve trades have settled,</div><div id="stat-card-caption-2" class="caption clip" data-start="2.292" data-duration="1.1470000000000002">and one spending rule</div><div id="stat-card-caption-3" class="caption clip" data-start="3.439" data-duration="1.146">held.</div></div> <audio id="stat-card-narration" class="clip" data-start="0" data-duration="5.485" data-track-index="10" src="assets/audio/stat-card-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio><audio id="stat-card-bed" class="clip" data-start="0" data-duration="5.485" data-track-index="11" src="assets/audio/ambient-bed.wav" data-volume="0.1" data-fade-in="1.2" data-fade-out="0.9" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.9,"v":0.2},{"t":1.5,"v":0.25},{"t":4.585,"v":0.25},{"t":5.485,"v":0}]}]}'></audio><audio id="stat-card-sfx" class="clip" data-start="0.6" data-hf-media-start-basis="local" data-duration="0.32" data-track-index="12" src="assets/audio/stat-number.wav" data-volume="0.26" data-fade-in="0.02" data-fade-out="0.18"></audio>
+    <div id="stat-card-captions" data-track-kind="captions"><div id="stat-card-caption-0" class="caption clip" data-start="0.5" data-duration="1.146">Five agents are active.</div><div id="stat-card-caption-1" class="caption clip" data-start="1.646" data-duration="1.146">Twelve trades have settled,</div><div id="stat-card-caption-2" class="caption clip" data-start="2.792" data-duration="1.1470000000000002">and one spending rule</div><div id="stat-card-caption-3" class="caption clip" data-start="3.939" data-duration="1.146">held.</div></div> <audio id="stat-card-narration" class="clip" data-start="0.5" data-hf-media-start-basis="local" data-duration="5.485" data-track-index="10" src="assets/audio/stat-card-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio><audio id="stat-card-sfx" class="clip" data-start="0.6" data-hf-media-start-basis="local" data-duration="0.32" data-track-index="12" src="assets/audio/stat-number.wav" data-volume="0.26" data-fade-in="0.02" data-fade-out="0.18"></audio>
   </div>
   <script>
     const props = {"number":"5","label":"agents active","caption":"12 trades settled. 1 rule held.","narration":"Five agents are active. Twelve trades have settled, and one spending rule held.","duration":5.485,"captions":[{"text":"Five agents are active.","start":0,"end":1.146},{"text":"Twelve trades have settled,","start":1.146,"end":2.292},{"text":"and one spending rule","start":2.292,"end":3.439},{"text":"held.","start":3.439,"end":4.585}]};
@@ -39,10 +40,13 @@
     document.querySelector("#stat-label").textContent = props.label;
     document.querySelector("#stat-caption").textContent = props.caption;
     const tl = gsap.timeline({ paused: true });
+    const sceneDuration = props.duration || 4;
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 0);
     tl.fromTo("#stat-card-panel", { opacity: 0, y: 70, scale: .94, rotation: -1.5 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: .75, ease: "power3.out" }, .15);
     tl.fromTo("#stat-number", { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .7, ease: "back.out(1.5)" }, .6);
     tl.fromTo("#stat-label", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .6, ease: "power2.out" }, 1.15);
     tl.fromTo("#stat-caption", { opacity: 0 }, { opacity: 1, duration: .6, ease: "power2.out" }, 1.75);
+    tl.to("#root", { opacity: .86, y: -10, duration: .5, ease: "power2.in" }, Math.max(.5, sceneDuration - .5));
     window.__timelines = window.__timelines || {};
     window.__timelines["stat-card"] = tl;
   </script>

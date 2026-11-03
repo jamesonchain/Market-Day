@@ -1,7 +1,7 @@
 <template>
   <style>
     __THEME__
-    #root { background: var(--night); }
+    #root { background: transparent; }
     .intro-cloud-a { top: 25%; left: -8%; }
     .intro-cloud-b { top: 43%; right: -12%; transform: scale(.72); opacity: .55; }
     .intro-copy { left: 9%; top: 17%; width: 82%; color: var(--white); }
@@ -23,11 +23,14 @@
     document.querySelector("#intro-subtitle").textContent = props.subtitle;
     document.querySelector("#intro-tag").textContent = props.tag;
     const tl = gsap.timeline({ paused: true });
+    const sceneDuration = props.duration || 6;
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 0);
     tl.fromTo(".intro-cloud-a", { x: -80, opacity: 0 }, { x: 100, opacity: .65, duration: 6, ease: "none" }, 0);
     tl.fromTo(".intro-cloud-b", { x: 80, opacity: 0 }, { x: -100, opacity: .55, duration: 6, ease: "none" }, 0);
     tl.fromTo("#intro-tag", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, .15);
     tl.fromTo("#intro-title", { opacity: 0, y: 28, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1, ease: "power3.out" }, .35);
     tl.fromTo("#intro-subtitle", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .8, ease: "power2.out" }, 1.1);
+    tl.to("#root", { opacity: .86, y: -10, duration: .5, ease: "power2.in" }, Math.max(.5, sceneDuration - .5));
     window.__timelines = window.__timelines || {};
     window.__timelines["day-intro"] = tl;
   </script>

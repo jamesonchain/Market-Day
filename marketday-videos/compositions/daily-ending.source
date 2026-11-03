@@ -1,0 +1,26 @@
+<template>
+  <style>
+    __THEME__
+    #root { background: transparent; color: var(--white); }
+    .ending-copy { left: 8%; right: 8%; top: 31%; text-align: center; }
+    .ending-title { margin: 0; font-size: 92px; line-height: .95; letter-spacing: -.06em; }
+    .ending-line { margin: 42px 0 0; color: var(--gold); font-size: 30px; }
+    .ending-horizon { position: absolute; left: 12%; right: 12%; bottom: 13%; height: 1px; background: rgba(255,246,234,.35); }
+  </style>
+  <div id="root" data-composition-id="daily-ending" data-width="1080" data-height="1350">
+    <div id="ending-copy" class="ending-copy clip" data-start="0" data-duration="3"><h1 id="ending-title" class="ending-title display"></h1><p id="ending-line" class="ending-line body"></p></div><div id="ending-horizon" class="ending-horizon clip" data-start="0" data-duration="3"></div>
+    __CAPTIONS__ __AUDIO__
+  </div>
+  <script>
+    const props = __PROPS__;
+    document.querySelector("#ending-title").textContent = props.title;
+    document.querySelector("#ending-line").textContent = props.endLine;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .55, ease: "power2.out" }, 0);
+    tl.fromTo("#ending-copy", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .75, ease: "power3.out" }, .18);
+    tl.fromTo("#ending-horizon", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .8, ease: "power2.out" }, .5);
+    tl.to("#root", { opacity: .92, duration: .7, ease: "power1.out" }, 2.3);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["daily-ending"] = tl;
+  </script>
+</template>

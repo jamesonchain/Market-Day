@@ -8,6 +8,7 @@
 .mono { font-family: "Geist Mono", "Space Mono", monospace; letter-spacing: .06em; }
 .clip { position: absolute; }
 .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, var(--violet) 38%, var(--rose) 73%, var(--horizon) 100%); }
+.sky, .stat-sky { opacity: 0; }
 .cloud { position: absolute; width: 330px; height: 78px; border-radius: 100px; background: rgba(255,246,234,.2); filter: blur(14px); }
 .cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
 .cloud:before { width: 130px; height: 130px; left: 62px; bottom: 12px; }

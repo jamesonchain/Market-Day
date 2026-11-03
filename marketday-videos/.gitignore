@@ -1,3 +1,4 @@
 node_modules/
 out/
+.thumbnails/
 .DS_Store

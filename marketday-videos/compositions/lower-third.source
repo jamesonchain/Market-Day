@@ -1,7 +1,7 @@
 <template>
   <style>
     __THEME__
-    #root { background: linear-gradient(180deg, var(--violet), var(--rose)); }
+    #root { background: transparent; }
     .lower-cloud { top: 30%; left: 58%; transform: scale(.8); }
     .lower-tag { left: 7%; bottom: 12%; width: 86%; padding: 38px 44px 42px; }
     .lower-title { margin: 0 0 12px; font-size: 58px; line-height: 1; letter-spacing: -.045em; }
@@ -19,9 +19,12 @@
     document.querySelector("#lower-title").textContent = props.title;
     document.querySelector("#lower-subtitle").textContent = props.subtitle;
     const tl = gsap.timeline({ paused: true });
+    const sceneDuration = props.duration || 3;
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 0);
     tl.fromTo(".lower-cloud", { x: 80, opacity: 0 }, { x: -50, opacity: .5, duration: 3, ease: "none" }, 0);
     tl.fromTo("#lower-tag", { opacity: 0, y: 100, rotation: 1.4 }, { opacity: 1, y: 0, rotation: 0, duration: .65, ease: "power3.out" }, .2);
     tl.to("#lower-tag", { opacity: 0, y: 70, duration: .45, ease: "power2.in" }, 2.35);
+    tl.to("#root", { opacity: .86, y: -10, duration: .5, ease: "power2.in" }, Math.max(.5, sceneDuration - .5));
     window.__timelines = window.__timelines || {};
     window.__timelines["lower-third"] = tl;
   </script>

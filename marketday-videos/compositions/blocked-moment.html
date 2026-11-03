@@ -10,6 +10,7 @@
 .mono { font-family: "Geist Mono", "Space Mono", monospace; letter-spacing: .06em; }
 .clip { position: absolute; }
 .sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, var(--violet) 38%, var(--rose) 73%, var(--horizon) 100%); }
+.sky, .stat-sky { opacity: 0; }
 .cloud { position: absolute; width: 330px; height: 78px; border-radius: 100px; background: rgba(255,246,234,.2); filter: blur(14px); }
 .cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
 .cloud:before { width: 130px; height: 130px; left: 62px; bottom: 12px; }
@@ -29,17 +30,20 @@
   </style>
   <div id="root" data-composition-id="blocked-moment" data-width="1080" data-height="1350">
     <div id="blocked-ground" class="blocked-ground clip" data-start="0" data-duration="4"></div><div id="blocked-pulse" class="blocked-pulse clip" data-start="0" data-duration="2.5"></div><div id="blocked-ring" class="blocked-ring clip" data-start="0" data-duration="3.5"></div><div id="blocked-label" class="blocked-label mono clip" data-start="0" data-duration="4">SPENDING RULE / ACTIVE</div><div id="blocked-tag" class="blocked-tag body clip" data-start=".8" data-duration="3.2"></div>
-    <div id="blocked-moment-captions" data-track-kind="captions"><div id="blocked-moment-caption-0" class="caption clip" data-start="0" data-duration="0.98">This trade is three</div><div id="blocked-moment-caption-1" class="caption clip" data-start="0.98" data-duration="0.98">times above a fair</div><div id="blocked-moment-caption-2" class="caption clip" data-start="1.96" data-duration="0.9809999999999999">price. The spending rule</div><div id="blocked-moment-caption-3" class="caption clip" data-start="2.941" data-duration="0.98">blocks it.</div></div> <audio id="blocked-moment-narration" class="clip" data-start="0" data-duration="4.821" data-track-index="10" src="assets/audio/blocked-moment-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio><audio id="blocked-moment-bed" class="clip" data-start="0" data-duration="4.821" data-track-index="11" src="assets/audio/ambient-bed.wav" data-volume="0.1" data-fade-in="1.2" data-fade-out="0.9" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.9,"v":0.2},{"t":1.5,"v":0.25},{"t":3.921,"v":0.25},{"t":4.821,"v":0}]}]}'></audio><audio id="blocked-moment-sfx" class="clip" data-start="1.55" data-hf-media-start-basis="local" data-duration="0.55" data-track-index="12" src="assets/audio/blocked-tag.wav" data-volume="0.26" data-fade-in="0.02" data-fade-out="0.18"></audio>
+    <div id="blocked-moment-captions" data-track-kind="captions"><div id="blocked-moment-caption-0" class="caption clip" data-start="0.5" data-duration="0.98">This trade is three</div><div id="blocked-moment-caption-1" class="caption clip" data-start="1.48" data-duration="0.98">times above a fair</div><div id="blocked-moment-caption-2" class="caption clip" data-start="2.46" data-duration="0.9809999999999999">price. The spending rule</div><div id="blocked-moment-caption-3" class="caption clip" data-start="3.441" data-duration="0.98">blocks it.</div></div> <audio id="blocked-moment-narration" class="clip" data-start="0.5" data-hf-media-start-basis="local" data-duration="4.821" data-track-index="10" src="assets/audio/blocked-moment-narration.wav" data-volume="1" data-fade-in="0.08" data-fade-out="0.8"></audio><audio id="blocked-moment-sfx" class="clip" data-start="1.55" data-hf-media-start-basis="local" data-duration="0.55" data-track-index="12" src="assets/audio/blocked-tag.wav" data-volume="0.26" data-fade-in="0.02" data-fade-out="0.18"></audio>
   </div>
   <script>
     const props = {"reason":"Price 3x above fair. Blocked.","narration":"This trade is three times above a fair price. The spending rule blocks it.","duration":4.821,"captions":[{"text":"This trade is three","start":0,"end":0.98},{"text":"times above a fair","start":0.98,"end":1.96},{"text":"price. The spending rule","start":1.96,"end":2.941},{"text":"blocks it.","start":2.941,"end":3.921}]};
     document.querySelector("#blocked-tag").textContent = props.reason;
     const tl = gsap.timeline({ paused: true });
+    const sceneDuration = props.duration || 4;
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 0);
     tl.fromTo("#blocked-ground", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .55, ease: "power2.out" }, .15);
     tl.fromTo("#blocked-ring", { y: -260, scale: 1.3, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .85, ease: "bounce.out" }, .3);
     tl.fromTo("#blocked-ring", { boxShadow: "0 0 34px rgba(255,61,46,.4), inset 0 0 28px rgba(255,61,46,.18)" }, { boxShadow: "0 0 8px rgba(255,61,46,.18), inset 0 0 8px rgba(255,61,46,.08)", duration: .8, ease: "power2.in" }, 1.1);
     tl.fromTo("#blocked-pulse", { scale: .25, opacity: .85 }, { scale: 1.2, opacity: 0, duration: 1.15, ease: "power2.out" }, .55);
     tl.fromTo("#blocked-tag", { opacity: 0, y: 24, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: .55, ease: "power2.out" }, 1.55);
+    tl.to("#root", { opacity: .86, y: -10, duration: .5, ease: "power2.in" }, Math.max(.5, sceneDuration - .5));
     window.__timelines = window.__timelines || {};
     window.__timelines["blocked-moment"] = tl;
   </script>

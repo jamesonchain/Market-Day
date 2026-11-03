@@ -1,7 +1,7 @@
 <template>
   <style>
     __THEME__
-    #root { background: var(--horizon); }
+    #root { background: transparent; }
     .stat-sky { position: absolute; inset: 0; background: radial-gradient(circle at 70% 20%, rgba(255,246,234,.32), transparent 38%), linear-gradient(180deg, var(--rose), var(--horizon)); }
     .stat-card { left: 7%; top: 13%; width: 86%; height: 74%; padding: 72px 70px; background: var(--paper); border-radius: 44px; color: var(--ink); box-shadow: 0 24px 60px rgba(20,22,49,.22); }
     .stat-kicker { color: rgba(20,23,43,.62); font-size: 18px; }
@@ -21,10 +21,13 @@
     document.querySelector("#stat-label").textContent = props.label;
     document.querySelector("#stat-caption").textContent = props.caption;
     const tl = gsap.timeline({ paused: true });
+    const sceneDuration = props.duration || 4;
+    tl.fromTo("#root", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 0);
     tl.fromTo("#stat-card-panel", { opacity: 0, y: 70, scale: .94, rotation: -1.5 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: .75, ease: "power3.out" }, .15);
     tl.fromTo("#stat-number", { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .7, ease: "back.out(1.5)" }, .6);
     tl.fromTo("#stat-label", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .6, ease: "power2.out" }, 1.15);
     tl.fromTo("#stat-caption", { opacity: 0 }, { opacity: 1, duration: .6, ease: "power2.out" }, 1.75);
+    tl.to("#root", { opacity: .86, y: -10, duration: .5, ease: "power2.in" }, Math.max(.5, sceneDuration - .5));
     window.__timelines = window.__timelines || {};
     window.__timelines["stat-card"] = tl;
   </script>
