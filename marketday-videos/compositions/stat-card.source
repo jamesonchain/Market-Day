@@ -8,10 +8,12 @@
     .stat-number { margin: 45px 0 4px; font-size: 240px; line-height: .78; letter-spacing: -.09em; color: var(--vermilion); }
     .stat-label { margin: 0; font-size: 54px; line-height: 1; letter-spacing: -.04em; }
     .stat-caption { margin: 45px 0 0; padding-top: 24px; border-top: 1px solid rgba(20,23,43,.22); font-size: 24px; color: rgba(20,23,43,.72); }
+    .caption { left: 8%; right: 8%; bottom: 12%; color: var(--ink); text-align: center; font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 34px; text-shadow: 0 2px 8px rgba(255,246,234,.8); }
   </style>
   <div id="root" data-composition-id="stat-card" data-width="1080" data-height="1350">
     <div class="stat-sky"></div>
     <article id="stat-card-panel" class="stat-card clip" data-start="0" data-duration="4"><div class="stat-kicker mono">FIELD REPORT / 01</div><div id="stat-number" class="stat-number display"></div><h2 id="stat-label" class="stat-label display"></h2><p id="stat-caption" class="stat-caption body"></p></article>
+    __CAPTIONS__ __AUDIO__
   </div>
   <script>
     const props = __PROPS__;

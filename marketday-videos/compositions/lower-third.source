@@ -7,10 +7,12 @@
     .lower-title { margin: 0 0 12px; font-size: 58px; line-height: 1; letter-spacing: -.045em; }
     .lower-subtitle { margin: 0; font-size: 25px; color: rgba(20,23,43,.72); }
     .lower-mark { color: var(--vermilion); font-size: 17px; margin-bottom: 22px; }
+    .caption { left: 8%; right: 8%; bottom: 12%; color: var(--white); text-align: center; font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 34px; text-shadow: 0 3px 12px rgba(20,22,49,.8); }
   </style>
   <div id="root" data-composition-id="lower-third" data-width="1080" data-height="1350">
     <div class="sky"></div><div id="lower-cloud" class="cloud lower-cloud clip" data-start="0" data-duration="3"></div>
     <div id="lower-tag" class="paper lower-tag clip" data-start="0" data-duration="3"><div class="lower-mark mono">MARKETDAY / LIVE</div><h2 id="lower-title" class="lower-title display"></h2><p id="lower-subtitle" class="lower-subtitle body"></p></div>
+    __CAPTIONS__ __AUDIO__
   </div>
   <script>
     const props = __PROPS__;

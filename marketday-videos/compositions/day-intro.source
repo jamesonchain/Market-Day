@@ -9,11 +9,13 @@
     .intro-subtitle { position: relative; width: 600px; margin: 38px 0 0; font-size: 28px; line-height: 1.2; color: rgba(255,246,234,.82); }
     .intro-tag { top: 8%; right: 9%; padding: 13px 19px; border: 1px solid rgba(255,246,234,.45); border-radius: 100px; font-size: 18px; }
     .intro-horizon { position: absolute; left: 7%; right: 7%; bottom: 9%; height: 2px; background: rgba(255,246,234,.4); }
+    .caption { left: 8%; right: 8%; bottom: 12%; color: var(--white); text-align: center; font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 34px; line-height: 1.08; text-shadow: 0 3px 12px rgba(20,22,49,.8); }
   </style>
   <div id="root" data-composition-id="day-intro" data-width="1080" data-height="1350">
     <div class="sky"></div><div id="intro-cloud-a" class="cloud intro-cloud-a clip" data-start="0" data-duration="6"></div><div id="intro-cloud-b" class="cloud intro-cloud-b clip" data-start="0" data-duration="6"></div><div class="grain"></div>
     <div id="intro-copy" class="intro-copy clip" data-start="0" data-duration="6"><div id="intro-tag" class="intro-tag mono clip" data-start="0" data-duration="2.4"></div><h1 id="intro-title" class="intro-title display clip" data-start="0" data-duration="4.8"></h1><p id="intro-subtitle" class="intro-subtitle body clip" data-start="0.7" data-duration="4.5"></p></div>
     <div id="intro-horizon" class="intro-horizon clip" data-start="0" data-duration="6"></div>
+    __CAPTIONS__ __AUDIO__
   </div>
   <script>
     const props = __PROPS__;

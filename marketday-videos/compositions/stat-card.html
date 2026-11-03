@@ -26,13 +26,15 @@
     .stat-number { margin: 45px 0 4px; font-size: 240px; line-height: .78; letter-spacing: -.09em; color: var(--vermilion); }
     .stat-label { margin: 0; font-size: 54px; line-height: 1; letter-spacing: -.04em; }
     .stat-caption { margin: 45px 0 0; padding-top: 24px; border-top: 1px solid rgba(20,23,43,.22); font-size: 24px; color: rgba(20,23,43,.72); }
+    .caption { left: 8%; right: 8%; bottom: 12%; color: var(--ink); text-align: center; font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 34px; text-shadow: 0 2px 8px rgba(255,246,234,.8); }
   </style>
-  <div data-hf-id="hf-azox" id="root" data-composition-id="stat-card" data-width="1080" data-height="1350">
-    <div data-hf-id="hf-p56i" class="stat-sky"></div>
-    <article data-hf-id="hf-3hg2" id="stat-card-panel" class="stat-card clip" data-start="0" data-duration="4"><div data-hf-id="hf-8ced" class="stat-kicker mono">FIELD REPORT / 01</div><div data-hf-id="hf-zrb4" id="stat-number" class="stat-number display"></div><h2 data-hf-id="hf-q07v" id="stat-label" class="stat-label display"></h2><p data-hf-id="hf-po4h" id="stat-caption" class="stat-caption body"></p></article>
+  <div id="root" data-composition-id="stat-card" data-width="1080" data-height="1350">
+    <div class="stat-sky"></div>
+    <article id="stat-card-panel" class="stat-card clip" data-start="0" data-duration="4"><div class="stat-kicker mono">FIELD REPORT / 01</div><div id="stat-number" class="stat-number display"></div><h2 id="stat-label" class="stat-label display"></h2><p id="stat-caption" class="stat-caption body"></p></article>
+    <div id="stat-card-captions" data-track-kind="captions"><div id="stat-card-caption-0" class="caption clip" data-start="0" data-duration="1.161">Five agents are active.</div><div id="stat-card-caption-1" class="caption clip" data-start="1.161" data-duration="1.161">Twelve trades have settled,</div><div id="stat-card-caption-2" class="caption clip" data-start="2.322" data-duration="1.162">and one spending rule</div><div id="stat-card-caption-3" class="caption clip" data-start="3.484" data-duration="1.1609999999999996">held.</div></div> <audio id="stat-card-narration" class="clip" data-start="0" data-duration="4.645" data-track-index="10" src="assets/audio/stat-card-narration.wav" data-volume="1" data-fade-in="0.05" data-fade-out="0.2"></audio><audio id="stat-card-bed" class="clip" data-start="0" data-duration="4.645" data-track-index="11" src="assets/audio/ambient-bed.wav" data-volume="0.18" data-fade-in="0.4" data-fade-out="0.5" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":1},{"t":0.5,"v":0.28},{"t":4.145,"v":0.28},{"t":4.645,"v":0.1}]}]}'></audio><audio id="stat-card-sfx" class="clip" data-start="0.6" data-hf-media-start-basis="local" data-duration="0.32" data-track-index="12" src="assets/audio/stat-number.wav" data-volume="0.48" data-fade-in="0.02" data-fade-out="0.18"></audio>
   </div>
   <script>
-    const props = {"number":"5","label":"agents active","caption":"12 trades settled. 1 rule held."};
+    const props = {"number":"5","label":"agents active","caption":"12 trades settled. 1 rule held.","narration":"Five agents are active. Twelve trades have settled, and one spending rule held.","duration":4.645,"captions":[{"text":"Five agents are active.","start":0,"end":1.161},{"text":"Twelve trades have settled,","start":1.161,"end":2.322},{"text":"and one spending rule","start":2.322,"end":3.484},{"text":"held.","start":3.484,"end":4.645}]};
     document.querySelector("#stat-number").textContent = props.number;
     document.querySelector("#stat-label").textContent = props.label;
     document.querySelector("#stat-caption").textContent = props.caption;

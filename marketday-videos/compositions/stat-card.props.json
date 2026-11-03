@@ -1,5 +1,29 @@
 {
   "number": "5",
   "label": "agents active",
-  "caption": "12 trades settled. 1 rule held."
+  "caption": "12 trades settled. 1 rule held.",
+  "narration": "Five agents are active. Twelve trades have settled, and one spending rule held.",
+  "duration": 4.645,
+  "captions": [
+    {
+      "text": "Five agents are active.",
+      "start": 0,
+      "end": 1.161
+    },
+    {
+      "text": "Twelve trades have settled,",
+      "start": 1.161,
+      "end": 2.322
+    },
+    {
+      "text": "and one spending rule",
+      "start": 2.322,
+      "end": 3.484
+    },
+    {
+      "text": "held.",
+      "start": 3.484,
+      "end": 4.645
+    }
+  ]
 }

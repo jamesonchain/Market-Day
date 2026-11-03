@@ -14,12 +14,11 @@
     </style>
   </head>
   <body>
-    <main id="root" data-composition-id="main" data-start="0" data-duration="21" data-width="__WIDTH__" data-height="__HEIGHT__">
-      <div id="day-intro" class="scene-host" data-composition-id="day-intro" data-composition-src="compositions/day-intro.html" data-start="0" data-duration="6" data-track-index="0" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
-      <div id="lower-third" class="scene-host" data-composition-id="lower-third" data-composition-src="compositions/lower-third.html" data-start="6" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
-      <div id="stat-card" class="scene-host" data-composition-id="stat-card" data-composition-src="compositions/stat-card.html" data-start="9" data-duration="4" data-track-index="2" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
-      <div id="blocked-moment" class="scene-host" data-composition-id="blocked-moment" data-composition-src="compositions/blocked-moment.html" data-start="13" data-duration="4" data-track-index="3" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
-      <div id="outro" class="scene-host" data-composition-id="outro" data-composition-src="compositions/outro.html" data-start="17" data-duration="4" data-track-index="4" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
+    <main id="root" data-composition-id="main" data-start="0" data-duration="__DAILY_DURATION__" data-width="__WIDTH__" data-height="__HEIGHT__">
+      <div id="day-intro" class="scene-host" data-composition-id="day-intro" data-composition-src="compositions/day-intro.html" data-start="0" data-duration="__DAY_DURATION__" data-track-index="0" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
+      <div id="lower-third" class="scene-host" data-composition-id="lower-third" data-composition-src="compositions/lower-third.html" data-start="__LOWER_START__" data-duration="__LOWER_DURATION__" data-track-index="1" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
+      <div id="stat-card" class="scene-host" data-composition-id="stat-card" data-composition-src="compositions/stat-card.html" data-start="__STAT_START__" data-duration="__STAT_DURATION__" data-track-index="2" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
+      <div id="blocked-moment" class="scene-host" data-composition-id="blocked-moment" data-composition-src="compositions/blocked-moment.html" data-start="__BLOCKED_START__" data-duration="__BLOCKED_DURATION__" data-track-index="3" data-track-kind="graphics" data-width="__WIDTH__" data-height="__HEIGHT__"></div>
     </main>
     <script>
       window.__timelines = window.__timelines || {};

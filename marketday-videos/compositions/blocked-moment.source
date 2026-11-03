@@ -7,9 +7,11 @@
     .blocked-pulse { left: 22%; top: 18%; width: 56%; aspect-ratio: 1; border: 2px solid rgba(255,61,46,.65); border-radius: 50%; }
     .blocked-tag { left: 12%; top: 68%; width: 76%; padding: 24px 30px; text-align: center; color: var(--vermilion); background: rgba(233,216,196,.96); border: 2px solid var(--vermilion); border-radius: 22px; font-size: 27px; box-shadow: 0 16px 38px rgba(255,61,46,.14); }
     .blocked-label { left: 0; right: 0; top: 10%; text-align: center; color: var(--vermilion); font-size: 18px; }
+    .caption { left: 8%; right: 8%; bottom: 12%; color: var(--white); text-align: center; font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 34px; text-shadow: 0 3px 12px rgba(20,22,49,.8); }
   </style>
   <div id="root" data-composition-id="blocked-moment" data-width="1080" data-height="1350">
     <div id="blocked-ground" class="blocked-ground clip" data-start="0" data-duration="4"></div><div id="blocked-pulse" class="blocked-pulse clip" data-start="0" data-duration="2.5"></div><div id="blocked-ring" class="blocked-ring clip" data-start="0" data-duration="3.5"></div><div id="blocked-label" class="blocked-label mono clip" data-start="0" data-duration="4">SPENDING RULE / ACTIVE</div><div id="blocked-tag" class="blocked-tag body clip" data-start=".8" data-duration="3.2"></div>
+    __CAPTIONS__ __AUDIO__
   </div>
   <script>
     const props = __PROPS__;
