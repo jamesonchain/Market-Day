@@ -1,0 +1,32 @@
+<template>
+  <style>
+    __THEME__
+    #root { background: var(--night); }
+    .intro-cloud-a { top: 25%; left: -8%; }
+    .intro-cloud-b { top: 43%; right: -12%; transform: scale(.72); opacity: .55; }
+    .intro-copy { left: 9%; top: 17%; width: 82%; color: var(--white); }
+    .intro-title { position: relative; margin: 0; font-size: 122px; line-height: .9; letter-spacing: -.065em; text-shadow: 0 0 28px rgba(255,246,234,.24); }
+    .intro-subtitle { position: relative; width: 600px; margin: 38px 0 0; font-size: 28px; line-height: 1.2; color: rgba(255,246,234,.82); }
+    .intro-tag { top: 8%; right: 9%; padding: 13px 19px; border: 1px solid rgba(255,246,234,.45); border-radius: 100px; font-size: 18px; }
+    .intro-horizon { position: absolute; left: 7%; right: 7%; bottom: 9%; height: 2px; background: rgba(255,246,234,.4); }
+  </style>
+  <div id="root" data-composition-id="day-intro" data-width="1080" data-height="1350">
+    <div class="sky"></div><div id="intro-cloud-a" class="cloud intro-cloud-a clip" data-start="0" data-duration="6"></div><div id="intro-cloud-b" class="cloud intro-cloud-b clip" data-start="0" data-duration="6"></div><div class="grain"></div>
+    <div id="intro-copy" class="intro-copy clip" data-start="0" data-duration="6"><div id="intro-tag" class="intro-tag mono clip" data-start="0" data-duration="2.4"></div><h1 id="intro-title" class="intro-title display clip" data-start="0" data-duration="4.8"></h1><p id="intro-subtitle" class="intro-subtitle body clip" data-start="0.7" data-duration="4.5"></p></div>
+    <div id="intro-horizon" class="intro-horizon clip" data-start="0" data-duration="6"></div>
+  </div>
+  <script>
+    const props = __PROPS__;
+    document.querySelector("#intro-title").textContent = props.title;
+    document.querySelector("#intro-subtitle").textContent = props.subtitle;
+    document.querySelector("#intro-tag").textContent = props.tag;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo(".intro-cloud-a", { x: -80, opacity: 0 }, { x: 100, opacity: .65, duration: 6, ease: "none" }, 0);
+    tl.fromTo(".intro-cloud-b", { x: 80, opacity: 0 }, { x: -100, opacity: .55, duration: 6, ease: "none" }, 0);
+    tl.fromTo("#intro-tag", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, .15);
+    tl.fromTo("#intro-title", { opacity: 0, y: 28, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1, ease: "power3.out" }, .35);
+    tl.fromTo("#intro-subtitle", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .8, ease: "power2.out" }, 1.1);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["day-intro"] = tl;
+  </script>
+</template>

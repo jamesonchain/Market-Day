@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1350px; overflow: hidden; background: #141631; }
+      body { font-family: Inter, Arial, sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      [data-composition-src] { position: absolute; inset: 0; }
+      .scene-host { pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <main data-hf-id="hf-9wzi" id="root" data-composition-id="main" data-start="0" data-duration="21" data-width="1080" data-height="1350">
+      <div data-hf-id="hf-zyb8" id="day-intro" class="scene-host" data-composition-id="day-intro" data-composition-src="compositions/day-intro.html" data-start="0" data-duration="6" data-track-index="0" data-track-kind="graphics" data-width="1080" data-height="1350"></div>
+      <div data-hf-id="hf-o1xc" id="lower-third" class="scene-host" data-composition-id="lower-third" data-composition-src="compositions/lower-third.html" data-start="6" data-duration="3" data-track-index="1" data-track-kind="graphics" data-width="1080" data-height="1350"></div>
+      <div data-hf-id="hf-7hfx" id="stat-card" class="scene-host" data-composition-id="stat-card" data-composition-src="compositions/stat-card.html" data-start="9" data-duration="4" data-track-index="2" data-track-kind="graphics" data-width="1080" data-height="1350"></div>
+      <div data-hf-id="hf-hpph" id="blocked-moment" class="scene-host" data-composition-id="blocked-moment" data-composition-src="compositions/blocked-moment.html" data-start="13" data-duration="4" data-track-index="3" data-track-kind="graphics" data-width="1080" data-height="1350"></div>
+      <div data-hf-id="hf-w1gy" id="outro" class="scene-host" data-composition-id="outro" data-composition-src="compositions/outro.html" data-start="17" data-duration="4" data-track-index="4" data-track-kind="graphics" data-width="1080" data-height="1350"></div>
+    </main>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines.main = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

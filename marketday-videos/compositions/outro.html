@@ -1,0 +1,48 @@
+<template>
+  <style>
+    :root { --horizon: #ffb38a; --rose: #e8718d; --violet: #4b3a7a; --night: #141631; --white: #fff6ea; --ink: #14172b; --gold: #ffc857; --paper: #e9d8c4; --vermilion: #ff3d2e; }
+@font-face { font-family: "Bricolage Grotesque"; src: local("Bricolage Grotesque"); }
+@font-face { font-family: "Geist Mono"; src: local("Geist Mono"); }
+* { box-sizing: border-box; }
+#root { position: absolute; inset: 0; overflow: hidden; }
+.display { font-family: "Bricolage Grotesque", Inter, Arial, sans-serif; }
+.body { font-family: Inter, Arial, sans-serif; }
+.mono { font-family: "Geist Mono", "Space Mono", monospace; letter-spacing: .06em; }
+.clip { position: absolute; }
+.sky { position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, var(--violet) 38%, var(--rose) 73%, var(--horizon) 100%); }
+.cloud { position: absolute; width: 330px; height: 78px; border-radius: 100px; background: rgba(255,246,234,.2); filter: blur(14px); }
+.cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+.cloud:before { width: 130px; height: 130px; left: 62px; bottom: 12px; }
+.cloud:after { width: 180px; height: 180px; right: 28px; bottom: 4px; }
+.grain { position: absolute; inset: 0; opacity: .12; background-image: radial-gradient(rgba(255,246,234,.5) .7px, transparent .8px); background-size: 5px 5px; mix-blend-mode: soft-light; }
+.eyebrow { color: var(--white); font-size: 19px; font-weight: 700; }
+.paper { border-radius: 34px; background: var(--paper); color: var(--ink); box-shadow: 0 18px 42px rgba(20,22,49,.2), inset 0 1px rgba(255,246,234,.65); }
+@media (prefers-reduced-motion: reduce) { .clip { animation: none !important; } }
+
+    #root { background: linear-gradient(180deg, var(--violet), var(--night)); color: var(--white); }
+    .outro-cloud-a { top: 26%; left: -12%; opacity: .34; }
+    .outro-cloud-b { top: 52%; right: -15%; transform: scale(.65); opacity: .25; }
+    .outro-copy { left: 9%; right: 9%; top: 29%; text-align: center; }
+    .outro-title { margin: 0; font-size: 92px; line-height: .95; letter-spacing: -.06em; }
+    .outro-handle { margin: 50px 0 0; color: var(--gold); font-size: 30px; }
+    .outro-repo { margin: 24px 0 0; color: rgba(255,246,234,.68); font-size: 19px; }
+    .outro-line { position: absolute; left: 14%; right: 14%; bottom: 12%; height: 1px; background: rgba(255,246,234,.3); }
+  </style>
+  <div data-hf-id="hf-lil9" id="root" data-composition-id="outro" data-width="1080" data-height="1350">
+    <div data-hf-id="hf-7ggn" class="sky"></div><div data-hf-id="hf-h3k7" id="outro-cloud-a" class="cloud outro-cloud-a clip" data-start="0" data-duration="4"></div><div data-hf-id="hf-b47d" id="outro-cloud-b" class="cloud outro-cloud-b clip" data-start="0" data-duration="4"></div><div data-hf-id="hf-h60x" class="grain"></div>
+    <div data-hf-id="hf-c2q0" id="outro-copy" class="outro-copy clip" data-start="0" data-duration="4"><h1 data-hf-id="hf-3ib6" id="outro-title" class="outro-title display"></h1><p data-hf-id="hf-xevu" id="outro-handle" class="outro-handle mono"></p><p data-hf-id="hf-q93v" id="outro-repo" class="outro-repo body"></p></div><div data-hf-id="hf-28jk" id="outro-line" class="outro-line clip" data-start="0" data-duration="4"></div>
+  </div>
+  <script>
+    const props = {"title":"Follow the build","handle":"@BlvckBoy03","repo":"github.com/BlvckBoy03/Market-Day"};
+    document.querySelector("#outro-title").textContent = props.title;
+    document.querySelector("#outro-handle").textContent = props.handle;
+    document.querySelector("#outro-repo").textContent = props.repo;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo(".outro-cloud-a", { x: -100, opacity: 0 }, { x: 50, opacity: .34, duration: 4, ease: "none" }, 0);
+    tl.fromTo(".outro-cloud-b", { x: 90, opacity: 0 }, { x: -50, opacity: .25, duration: 4, ease: "none" }, 0);
+    tl.fromTo(".outro-copy", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .9, ease: "power3.out" }, .25);
+    tl.fromTo(".outro-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1, ease: "power2.out" }, .8);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["outro"] = tl;
+  </script>
+</template>

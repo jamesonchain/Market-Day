@@ -1,0 +1,30 @@
+<template>
+  <style>
+    __THEME__
+    #root { background: linear-gradient(180deg, var(--violet), var(--night)); color: var(--white); }
+    .outro-cloud-a { top: 26%; left: -12%; opacity: .34; }
+    .outro-cloud-b { top: 52%; right: -15%; transform: scale(.65); opacity: .25; }
+    .outro-copy { left: 9%; right: 9%; top: 29%; text-align: center; }
+    .outro-title { margin: 0; font-size: 92px; line-height: .95; letter-spacing: -.06em; }
+    .outro-handle { margin: 50px 0 0; color: var(--gold); font-size: 30px; }
+    .outro-repo { margin: 24px 0 0; color: rgba(255,246,234,.68); font-size: 19px; }
+    .outro-line { position: absolute; left: 14%; right: 14%; bottom: 12%; height: 1px; background: rgba(255,246,234,.3); }
+  </style>
+  <div id="root" data-composition-id="outro" data-width="1080" data-height="1350">
+    <div class="sky"></div><div id="outro-cloud-a" class="cloud outro-cloud-a clip" data-start="0" data-duration="4"></div><div id="outro-cloud-b" class="cloud outro-cloud-b clip" data-start="0" data-duration="4"></div><div class="grain"></div>
+    <div id="outro-copy" class="outro-copy clip" data-start="0" data-duration="4"><h1 id="outro-title" class="outro-title display"></h1><p id="outro-handle" class="outro-handle mono"></p><p id="outro-repo" class="outro-repo body"></p></div><div id="outro-line" class="outro-line clip" data-start="0" data-duration="4"></div>
+  </div>
+  <script>
+    const props = __PROPS__;
+    document.querySelector("#outro-title").textContent = props.title;
+    document.querySelector("#outro-handle").textContent = props.handle;
+    document.querySelector("#outro-repo").textContent = props.repo;
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo(".outro-cloud-a", { x: -100, opacity: 0 }, { x: 50, opacity: .34, duration: 4, ease: "none" }, 0);
+    tl.fromTo(".outro-cloud-b", { x: 90, opacity: 0 }, { x: -50, opacity: .25, duration: 4, ease: "none" }, 0);
+    tl.fromTo(".outro-copy", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .9, ease: "power3.out" }, .25);
+    tl.fromTo(".outro-line", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 1, ease: "power2.out" }, .8);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["outro"] = tl;
+  </script>
+</template>
