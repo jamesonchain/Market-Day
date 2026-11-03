@@ -4,7 +4,9 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; background: #141631; }
 body { overflow-x: hidden; }
-.route-content { position: relative; z-index: 20; min-height: 100dvh; background: linear-gradient(180deg, transparent 0%, rgba(20,22,49,.16) 55%, rgba(20,22,49,.38) 100%); }
+.route-content { position: relative; z-index: 20; min-height: 100dvh; isolation: isolate; background: linear-gradient(180deg, transparent 0%, rgba(20,22,49,.16) 55%, rgba(20,22,49,.38) 100%); }
+.route-content > * { position: relative; z-index: 1; }
+.route-content .diorama-page > .relative { position: relative; z-index: 2; }
 body { color: var(--soft); font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
 button, a { font: inherit; }
 .diorama-page { isolation: isolate; min-height: 100dvh; position: relative; }
