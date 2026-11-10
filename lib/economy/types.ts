@@ -10,7 +10,7 @@ export type EconomyEvent = {
   type: "need" | "bid" | "offer" | "counter" | "policy check" | "blocked" | "settled" | "produced";
   actor: AgentRole;
   message: string;
-  label: "TESTNET TRANSFER" | "INTENTS QUOTE (mainnet data)" | "DEMO LEDGER" | "MAINNET SWAP" | "LOCAL RULE";
+  label: "TESTNET TRANSFER" | "INTENTS QUOTE (MAINNET DATA)" | "DEMO LEDGER" | "LOCAL RULE";
   data?: Record<string, string | number | boolean>;
 };
 
