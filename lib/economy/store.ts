@@ -84,3 +84,6 @@ export async function runStoryBeat() {
   await persist();
   return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() };
 }
+
+export async function makeBakerHungry() { await hydrate(); const baker = agents.get("baker")!; baker.needs.hunger = 99; baker.needs.supplies = 0; emit(event(tickNumber, "need", "baker", "baker is hungry and out of flour", "LOCAL RULE", { hunger: 99, supplies: 0 })); await persist(); return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() }; }
+export async function resetEconomy() { tickNumber = 0; events = []; hydrated = Promise.resolve(); agents.get("baker")!.needs = { hunger: 22, supplies: 78 }; agents.get("baker")!.inventory = { flour: 0, bread: 1 }; return { tick: tickNumber, agents: getAgents(), events, persistence: persistenceMode() }; }
