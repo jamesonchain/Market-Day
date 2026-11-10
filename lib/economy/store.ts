@@ -37,10 +37,6 @@ export async function runTick() {
   const bakerDecision = await decide("baker", context);
   emit(proposalEvent(tickNumber, "baker", bakerDecision.proposal, bakerDecision.source));
   if (tickNumber % 2 === 1) {
-    for (const role of ["farmer", "farmerTwo"] as const) {
-      const decision = await decide(role, `${context} A baker wants flour.`);
-      emit(proposalEvent(tickNumber, role, decision.proposal, decision.source));
-    }
     const overcharge = checkSpendingPolicy({ buyer: "baker", seller: "farmerTwo", item: "flour", amount: 2, unitPrice: 12, spentToday: 0 }, undefined, 3);
     emit(event(tickNumber, "policy check", "baker", "farmer-two offer checked against the leash", "LOCAL RULE", { allowed: overcharge.allowed }));
     if (!overcharge.allowed) emit(blockedEvent(tickNumber, "baker", overcharge.reason));
