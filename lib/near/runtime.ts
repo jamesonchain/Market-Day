@@ -2,8 +2,11 @@ import { Account, KeyPair, JsonRpcProvider, type Provider } from "near-api-js";
 import type { AgentRole } from "./types";
 
 export const AGENT_ROLES: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
-export const nearConfig = { networkId: process.env.NEAR_NETWORK_ID ?? "testnet", nodeUrl: process.env.NEAR_NODE_URL ?? "https://rpc.testnet.near.org", parentAccountId: process.env.NEAR_PARENT_ACCOUNT_ID ?? "", parentPrivateKey: process.env.NEAR_PARENT_PRIVATE_KEY ?? "", usdcContractId: process.env.NEAR_USDC_CONTRACT_ID ?? "", agentAccountSuffix: process.env.NEAR_AGENT_ACCOUNT_SUFFIX ?? "" };
-export function isNearConfigured() { return nearConfig.networkId === "testnet" && Boolean(nearConfig.parentAccountId && nearConfig.parentPrivateKey && nearConfig.usdcContractId); }
+const testnetRpc = "https://rpc.testnet.near.org";
+const requestedRpc = process.env.NEAR_NODE_URL ?? testnetRpc;
+export const nearConfig = { networkId: "testnet" as const, nodeUrl: requestedRpc.includes("testnet") ? requestedRpc : testnetRpc, parentAccountId: process.env.NEAR_PARENT_ACCOUNT_ID ?? "", parentPrivateKey: process.env.NEAR_PARENT_PRIVATE_KEY ?? "", usdcContractId: process.env.NEAR_USDC_CONTRACT_ID ?? "", agentAccountSuffix: process.env.NEAR_AGENT_ACCOUNT_SUFFIX ?? "" };
+export function isNearConfigured() { return nearConfig.nodeUrl.includes("testnet") && Boolean(nearConfig.parentAccountId && nearConfig.parentPrivateKey && nearConfig.usdcContractId); }
+export function appMode() { return isNearConfigured() ? "REAL TESTNET" as const : "DEMO MODE" as const; }
 export function getProvider(): Provider { return new JsonRpcProvider({ url: nearConfig.nodeUrl }); }
 export function getParentAccount() { return nearConfig.parentAccountId && nearConfig.parentPrivateKey ? new Account(nearConfig.parentAccountId, getProvider(), KeyPair.fromString(nearConfig.parentPrivateKey as `ed25519:${string}`).toString() as `ed25519:${string}`) : null; }
 export function agentAccountId(role: AgentRole) { const prefix = role === "farmerTwo" ? "farmer-two" : role; const suffix = nearConfig.agentAccountSuffix || nearConfig.parentAccountId; return suffix ? `${prefix}.${suffix}` : `${prefix}.demo.testnet`; }

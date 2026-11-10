@@ -9,7 +9,7 @@ export async function createAgentAccount(role: AgentRole): Promise<AgentAccount>
   if (!parent || !isNearConfigured()) return { role, accountId, publicKey: "unconfigured", mode: "DEMO LEDGER" };
   const keyPair = KeyPair.fromRandom("ed25519");
   try { await parent.createSubAccount({ accountOrPrefix: accountId, publicKey: keyPair.getPublicKey(), nearToTransfer: BigInt(parseNearAmount(Number(process.env.NEAR_AGENT_STARTING_NEAR ?? "0.1")) ?? "0") }); } catch (error) { const message = error instanceof Error ? error.message : String(error); if (!message.toLowerCase().includes("already exists")) throw error; }
-  return { role, accountId, publicKey: keyPair.getPublicKey().toString(), mode: "TESTNET TRANSFER" };
+  return { role, accountId, publicKey: keyPair.getPublicKey().toString(), privateKey: keyPair.toString(), mode: "TESTNET TRANSFER" };
 }
 export async function getBalance(role: AgentRole) { const account = getAgentAccount(role); if (!account) return { role, accountId: agentAccountId(role), near: "0", usdc: "0", mode: "DEMO LEDGER" as const }; const state = await account.getBalance(); return { role, accountId: agentAccountId(role), near: state.toString(), usdc: "unknown", mode: "TESTNET TRANSFER" as const }; }
 export async function transferNear(from: AgentRole, to: AgentRole, amountNear: string) { const sender = getAgentAccount(from); const receiverId = agentAccountId(to); if (!sender) return { mode: "DEMO LEDGER" as const, receiverId, amountNear }; const result = await sender.transfer({ receiverId, amount: BigInt(parseNearAmount(Number(amountNear)) ?? "0") }); return { mode: "TESTNET TRANSFER" as const, receiverId, amountNear, txHash: result.transaction.hash }; }
