@@ -1,7 +1,8 @@
 import type { AgentState, EconomyEvent } from "./types";
 
 export type EconomySnapshot = { agents: AgentState[]; events: EconomyEvent[]; tick: number };
-const tableUrl = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY ? `${process.env.SUPABASE_URL}/rest/v1/marketday_state` : null;
+const supabaseUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+const tableUrl = supabaseUrl && process.env.SUPABASE_SERVICE_ROLE_KEY ? `${supabaseUrl}/rest/v1/marketday_state` : null;
 
 export function persistenceMode() { return tableUrl ? "SUPABASE" : "IN MEMORY"; }
 export async function loadSnapshot(): Promise<EconomySnapshot | null> {
