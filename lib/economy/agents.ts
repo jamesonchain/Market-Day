@@ -33,7 +33,8 @@ function parseJson(text: string) { return validate(JSON.parse(text.replace(/^```
 async function askGemini(role: AgentRole, context: string) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ generationConfig: { temperature: 0, responseMimeType: "application/json" }, systemInstruction: { parts: [{ text: "Return one JSON object only. Keys are action, item, amount, price, target, reason. Allowed actions: post bid, accept offer, counter, produce, rest." }] }, contents: [{ role: "user", parts: [{ text: `${context}\nAgent role: ${role}` }] }] }) });
+  const model = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ generationConfig: { temperature: 0, responseMimeType: "application/json" }, systemInstruction: { parts: [{ text: "Return one JSON object only. Keys are action, item, amount, price, target, reason. Allowed actions: post bid, accept offer, counter, produce, rest." }] }, contents: [{ role: "user", parts: [{ text: `${context}\nAgent role: ${role}` }] }] }) });
   if (!response.ok) throw new Error(`Gemini request failed: ${response.status}`);
   const json = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
   return parseJson(json.candidates?.[0]?.content?.parts?.[0]?.text ?? "");

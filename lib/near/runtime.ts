@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import type { AgentRole } from "./types";
 
 export const AGENT_ROLES: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
-const testnetRpc = "https://rpc.testnet.near.org";
+const testnetRpc = "https://rpc.testnet.fastnear.com";
 const requestedRpc = process.env.NEAR_NODE_URL ?? testnetRpc;
 export const nearConfig = { networkId: "testnet" as const, nodeUrl: requestedRpc.includes("testnet") ? requestedRpc : testnetRpc, parentAccountId: process.env.NEAR_PARENT_ACCOUNT_ID ?? "", parentPrivateKey: process.env.NEAR_PARENT_PRIVATE_KEY ?? "", usdcContractId: process.env.NEAR_USDC_CONTRACT_ID ?? "" };
 export function isNearConfigured() { return nearConfig.nodeUrl.includes("testnet") && Boolean(nearConfig.parentAccountId && nearConfig.parentPrivateKey && nearConfig.usdcContractId); }
@@ -16,6 +16,7 @@ export function getAgentKey(role: AgentRole) { const envKeys = process.env.NEAR_
 export function getAgentAccount(role: AgentRole) { const key = getAgentKey(role); return key ? new Account(agentAccountId(role), getProvider(), key.toString() as `ed25519:${string}`) : null; }
 export async function readAccount(accountId: string) { try { return await getProvider().query({ request_type: "view_account", finality: "final", account_id: accountId }) as { amount: string; storage_usage: number }; } catch { return null; } }
 export async function readUsdcRaw(accountId: string) { if (!nearConfig.usdcContractId) return null; try { const args = Buffer.from(JSON.stringify({ account_id: accountId })).toString("base64"); const result = await getProvider().query({ request_type: "call_function", finality: "final", account_id: nearConfig.usdcContractId, method_name: "ft_balance_of", args_base64: args }) as { result: number[] }; return BigInt(Buffer.from(result.result).toString("utf8").replaceAll('"', "")); } catch { return null; } }
+export async function readUsdcStorage(accountId: string) { if (!nearConfig.usdcContractId) return null; try { const args = Buffer.from(JSON.stringify({ account_id: accountId })).toString("base64"); const result = await getProvider().query({ request_type: "call_function", finality: "final", account_id: nearConfig.usdcContractId, method_name: "storage_balance_of", args_base64: args }) as { result: number[] }; return Buffer.from(result.result).toString("utf8") !== "null"; } catch { return null; } }
 export function formatNear(yocto: string | null) { if (yocto === null) return "unavailable"; const value = BigInt(yocto); return `${value / 1_000_000_000_000_000_000_000_000n}.${(value % 1_000_000_000_000_000_000_000_000n).toString().padStart(24, "0").replace(/0+$/, "") || "0"}`; }
 export function formatUsdc(raw: bigint | null) { if (raw === null) return "unavailable"; const cents = (raw * 100n + 5_000n) / 1_000_000n; return `${cents / 100n}.${(cents % 100n).toString().padStart(2, "0")}`; }
 export async function getParentReadiness() { const account = await readAccount(nearConfig.parentAccountId); const usdc = await readUsdcRaw(nearConfig.parentAccountId); return { accountExists: Boolean(account), hasNear: Boolean(account && BigInt(account.amount) > 0n), near: formatNear(account?.amount ?? null), usdc: formatUsdc(usdc), hasUsdc: Boolean(usdc && usdc > 0n) }; }

@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import nextEnv from "@next/env";
 const { loadEnvConfig } = nextEnv;
 loadEnvConfig(process.cwd());
-const { AGENT_ROLES, getAgentKey, getParentReadiness, nearConfig, readUsdcRaw } = await import("../lib/near/runtime");
+const { AGENT_ROLES, agentAccountId, formatUsdc, getAgentKey, getParentReadiness, nearConfig, readUsdcRaw } = await import("../lib/near/runtime");
 const { createAgentAccount, ensureAgentNear, registerStorage, transferUsdcFromParent, withRetries } = await import("../lib/near/accounts");
 
 const explorer = (accountId: string) => `https://testnet.nearblocks.io/address/${accountId}`;
@@ -39,9 +39,20 @@ async function main() {
   for (const role of AGENT_ROLES) { const storage = await registerStorage(role); console.log(`${role} USDC registration: ${storage.registered ? "ready" : "skipped"}`); }
   const parentUsdc = await readUsdcRaw(nearConfig.parentAccountId);
   const startingUsdc = process.env.NEAR_AGENT_STARTING_USDC ?? "3";
-  const required = usdcUnits(startingUsdc) * BigInt(AGENT_ROLES.length);
-  if (!parentUsdc || parentUsdc < required) { console.warn(`Parent USDC is ${parentUsdc === null ? "unavailable" : parentUsdc.toString()} raw units. Need ${required.toString()} raw units for ${startingUsdc} USDC per agent. Skipping USDC funding.`); return; }
-  for (const role of AGENT_ROLES) { const result = await transferUsdcFromParent(role, startingUsdc); console.log(`${role} funded with ${startingUsdc} USDC. Transaction: ${result.txHash ? `${result.txHash} ${explorer(result.to)}` : "skipped"}`); }
+  const target = usdcUnits(startingUsdc);
+  const needs: Array<{ role: (typeof AGENT_ROLES)[number]; amount: string }> = [];
+  for (const role of AGENT_ROLES) {
+    const current = await readUsdcRaw(agentAccountId(role));
+    const needed = target - (current ?? 0n);
+    if (needed > 0n) {
+      needs.push({ role, amount: `${needed / 1_000_000n}.${(needed % 1_000_000n).toString().padStart(6, "0")}` });
+    } else {
+      console.log(`${role} already has ${formatUsdc(current)} USDC. No funding needed.`);
+    }
+  }
+  const required = needs.reduce((total, item) => total + usdcUnits(item.amount), 0n);
+  if (!parentUsdc || parentUsdc < required) { console.warn(`Parent USDC is ${parentUsdc === null ? "unavailable" : formatUsdc(parentUsdc)}. Need ${formatUsdc(required)} USDC for the remaining agent funding. Skipping USDC funding.`); return; }
+  for (const item of needs) { const result = await transferUsdcFromParent(item.role, item.amount); console.log(`${item.role} funded with ${item.amount} USDC. Transaction: ${result.txHash ? `${result.txHash} ${explorer(result.to)}` : "skipped"}`); }
 }
 
 void main().catch((error) => { console.error(error instanceof Error ? error.message : String(error)); process.exitCode = 1; });

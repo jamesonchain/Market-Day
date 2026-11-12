@@ -1,6 +1,5 @@
 import { KeyPair, actions, parseNearAmount } from "near-api-js";
-import { FungibleToken } from "near-api-js/tokens";
-import { agentAccountId, formatNear, formatUsdc, getAgentAccount, getAgentKey, getParentAccount, isNearConfigured, nearConfig, readAccount, readUsdcRaw } from "./runtime";
+import { agentAccountId, formatNear, formatUsdc, getAgentAccount, getAgentKey, getParentAccount, isNearConfigured, nearConfig, readAccount, readUsdcRaw, readUsdcStorage } from "./runtime";
 import type { AgentAccount, AgentRole } from "./types";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,12 +37,12 @@ export async function transferNear(from: AgentRole, to: AgentRole, amountNear: s
 
 export async function registerStorage(role: AgentRole) {
   const account = getAgentAccount(role); if (!account || !nearConfig.usdcContractId) return { mode: "DEMO LEDGER" as const, accountId: agentAccountId(role), registered: false };
+  if (await readUsdcStorage(agentAccountId(role))) return { mode: "TESTNET TRANSFER" as const, accountId: agentAccountId(role), registered: true };
   try { const result = await withRetries(`register ${agentAccountId(role)} on USDC`, () => account.signAndSendTransaction({ receiverId: nearConfig.usdcContractId, actions: [actions.functionCall("storage_deposit", { account_id: agentAccountId(role), registration_only: true }, 30_000_000_000_000n, 1_250_000_000_000_000_000_000n)] })); return { mode: "TESTNET TRANSFER" as const, accountId: agentAccountId(role), registered: true, txHash: result.transaction.hash }; } catch (error) { const message = error instanceof Error ? error.message : String(error); if (message.toLowerCase().includes("already registered")) return { mode: "TESTNET TRANSFER" as const, accountId: agentAccountId(role), registered: true }; throw error; }
 }
 
 export async function transferUsdcFromParent(to: AgentRole, amountUsdc = process.env.NEAR_AGENT_STARTING_USDC ?? "3") {
   const parent = getParentAccount(); if (!parent || !nearConfig.usdcContractId) return { mode: "DEMO LEDGER" as const, to: agentAccountId(to), amountUsdc, skipped: true };
-  const token = new FungibleToken(nearConfig.usdcContractId, { name: "USD Coin", symbol: "USDC", decimals: 6 });
-  const result = await withRetries(`fund ${agentAccountId(to)} with USDC`, () => token.transfer({ from: parent, receiverId: agentAccountId(to), amount: BigInt(Math.round(Number(amountUsdc) * 1_000_000)) }));
+  const result = await withRetries(`fund ${agentAccountId(to)} with USDC`, () => parent.signAndSendTransaction({ receiverId: nearConfig.usdcContractId, actions: [actions.functionCall("ft_transfer", { receiver_id: agentAccountId(to), amount: BigInt(Math.round(Number(amountUsdc) * 1_000_000)).toString() }, 30_000_000_000_000n, 1n)] }));
   return { mode: "TESTNET TRANSFER" as const, to: agentAccountId(to), amountUsdc, txHash: result.transaction.hash };
 }

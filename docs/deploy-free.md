@@ -38,7 +38,7 @@ For GitHub login, create an OAuth app in GitHub Developer Settings. Set the call
 
 ## 6. Prepare local environment
 
-Copy `.env.example` to `.env.local`, then fill the values you need. Set `NEAR_NETWORK_ID=testnet`, use a testnet RPC, set `NEAR_USDC_CONTRACT_ID`, and keep all private values server only.
+Copy `.env.example` to `.env.local`, then fill the values you need. Keep the FastNear testnet RPC, set `NEAR_USDC_CONTRACT_ID`, and keep all private values server only.
 
 Seed the five testnet agent subaccounts after the parent has testnet NEAR:
 

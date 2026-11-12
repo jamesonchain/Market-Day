@@ -1,13 +1,18 @@
 import nextEnv from "@next/env";
 const { loadEnvConfig } = nextEnv;
 loadEnvConfig(process.cwd());
-const { AGENT_ROLES, agentAccountId, getParentReadiness, nearConfig, readAccount, readUsdcRaw } = await import("../lib/near/runtime");
+const { AGENT_ROLES, agentAccountId, formatUsdc, getParentReadiness, nearConfig, readAccount, readUsdcRaw, readUsdcStorage } = await import("../lib/near/runtime");
+const { persistenceMode } = await import("../lib/economy/persistence");
 
 const fixes: string[] = [];
 console.log("Marketday testnet doctor");
+const geminiKey = process.env.GEMINI_API_KEY;
+if (!geminiKey) fixes.push("Add GEMINI_API_KEY from Google AI Studio, or keep the deterministic fallback and accept that the Gemini check is skipped.");
+else { try { const model = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite"; const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ generationConfig: { maxOutputTokens: 4, temperature: 0 }, contents: [{ role: "user", parts: [{ text: "Reply OK" }] }] }) }); if (!response.ok) { const body = await response.text(); let detail = `HTTP ${response.status}`; try { const parsed = JSON.parse(body) as { error?: { message?: string } }; detail = parsed.error?.message ? `${detail}: ${parsed.error.message}` : detail; } catch { /* keep status only */ } throw new Error(detail); } console.log("PASS Gemini: tiny test call succeeded"); } catch (error) { fixes.push(`Gemini key failed its tiny test call: ${error instanceof Error ? error.message : String(error)}`); } }
+console.log(`PASS Database: ${persistenceMode()}${persistenceMode() === "IN MEMORY" ? " (local only, configure Supabase for Vercel)" : ""}`);
 if (!nearConfig.parentAccountId) fixes.push("Set NEAR_PARENT_ACCOUNT_ID to the named testnet account, for example marketday.testnet.");
 if (!nearConfig.usdcContractId) fixes.push("Set NEAR_USDC_CONTRACT_ID. Open https://testnet.nearblocks.io, open marketday.testnet, select Tokens, and copy the testnet USDC contract ID.");
 const parent = nearConfig.parentAccountId ? await getParentReadiness() : null;
 if (parent) { console.log(`Parent ${nearConfig.parentAccountId}: ${parent.near} NEAR, ${parent.usdc} USDC`); if (!parent.accountExists) fixes.push(`Parent ${nearConfig.parentAccountId} does not exist on testnet.`); if (!parent.hasNear) fixes.push(`Fund ${nearConfig.parentAccountId} with testnet NEAR for account creation and storage deposits.`); if (nearConfig.usdcContractId && !parent.hasUsdc) fixes.push(`Fund ${nearConfig.parentAccountId} with testnet USDC before running seed.agents.`); }
-for (const role of AGENT_ROLES) { const accountId = agentAccountId(role); const account = await readAccount(accountId); const usdc = await readUsdcRaw(accountId); console.log(`${role}: ${accountId} ${account ? "exists" : "missing"}, USDC ${usdc === null ? "unavailable" : usdc.toString()}`); if (!account) fixes.push(`Run npx tsx scripts/seed-agents.ts to create ${accountId}.`); }
+for (const role of AGENT_ROLES) { const accountId = agentAccountId(role); const account = await readAccount(accountId); const usdc = await readUsdcRaw(accountId); const storage = await readUsdcStorage(accountId); console.log(`${account ? "PASS" : "FIX"} ${role}: ${accountId} ${account ? "exists" : "missing"}, USDC ${formatUsdc(usdc)}, storage ${storage === true ? "registered" : storage === false ? "missing" : "unavailable"}`); if (!account) fixes.push(`Run npm run seed:agents to create ${accountId}.`); if (nearConfig.usdcContractId && storage !== true) fixes.push(`Run npm run seed:agents to register ${accountId} on the USDC contract.`); if (nearConfig.usdcContractId && (!usdc || usdc <= 0n)) fixes.push(`Fund ${accountId} with testnet USDC by rerunning npm run seed:agents after funding the parent.`); }
 if (fixes.length) { console.log("Fixes needed:"); fixes.forEach((fix) => console.log(`- ${fix}`)); process.exitCode = 1; } else console.log("Testnet setup looks ready. No private keys were printed.");
