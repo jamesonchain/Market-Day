@@ -3,6 +3,7 @@ import type { AgentRole, AgentState, EconomyEvent } from "./types";
 import { getSettlementAdapter } from "../near/settlement";
 import { blockedEvent, checkSpendingPolicy } from "../policy/policy";
 import { loadSnapshot, persistenceMode, saveSnapshot } from "./persistence";
+import { agentAccountId, nearConfig, readUsdcRaw } from "../near/runtime";
 
 const roles: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
 const agents = new Map<AgentRole, AgentState>([
@@ -20,6 +21,7 @@ let hydrated: Promise<void> | null = null;
 function emit(event: EconomyEvent) { events = [...events.slice(-99), event]; listeners.forEach((listener) => listener(event)); return event; }
 function event(tick: number, type: EconomyEvent["type"], actor: AgentRole, message: string, label: EconomyEvent["label"], data?: EconomyEvent["data"]): EconomyEvent { return { id: crypto.randomUUID(), tick, at: new Date().toISOString(), type, actor, message, label, data }; }
 function settlementDetails(settlement: { txHash?: string; explorerUrl?: string }) { return settlement.txHash ? ` transaction ${settlement.txHash} ${settlement.explorerUrl ?? ""}` : ""; }
+async function canTransfer(role: AgentRole, rawAmount: string) { if (!nearConfig.usdcContractId) return true; const balance = await readUsdcRaw(agentAccountId(role)); return balance === null || balance >= BigInt(rawAmount); }
 
 export function getAgents() { return roles.map((role) => agents.get(role)!); }
 export function getEvents() { return events; }
@@ -44,6 +46,7 @@ export async function runTick() {
     const fair = checkSpendingPolicy({ buyer: "baker", seller: "farmer", item: "flour", amount: 2, unitPrice: 3, spentToday: 0 }, undefined, 3);
     emit(event(tickNumber, "policy check", "baker", fair.reason, "LOCAL RULE", { allowed: fair.allowed }));
     if (!fair.allowed) return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12) };
+    if (!(await canTransfer("farmer", "3000000"))) { emit(event(tickNumber, "blocked", "farmer", "testnet transfer skipped because farmer needs more USDC", "LOCAL RULE", { reason: "fund the farmer testnet wallet before the next settlement" })); await persist(); return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12), persistence: persistenceMode() }; }
     const adapter = getSettlementAdapter();
     const settlement = await adapter.transferToken("farmer", "baker", "3000000");
     baker.inventory.flour = (baker.inventory.flour ?? 0) + 2;
@@ -74,14 +77,18 @@ export async function runStoryBeat() {
   emit(event(tickNumber, "policy check", "baker", "leash checks farmer two quote", "LOCAL RULE", { allowed: overcharge.allowed }));
   if (!overcharge.allowed) emit(blockedEvent(tickNumber, "baker", overcharge.reason));
   const adapter = getSettlementAdapter();
-  const flourSettlement = await adapter.transferToken("farmer", "baker", "3000000");
-  farmer.inventory.wheat = Math.max(0, (farmer.inventory.wheat ?? 0) - 2); baker.inventory.flour = 2; farmer.balance += 3; baker.balance -= 3;
-  emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${flourSettlement.mode}${settlementDetails(flourSettlement)}`, flourSettlement.mode, { amount: 2, unitPrice: 3, txHash: flourSettlement.txHash ?? "", explorer: flourSettlement.explorerUrl ?? "" }));
+  if (await canTransfer("farmer", "3000000")) {
+    const flourSettlement = await adapter.transferToken("farmer", "baker", "3000000");
+    farmer.inventory.wheat = Math.max(0, (farmer.inventory.wheat ?? 0) - 2); baker.inventory.flour = 2; farmer.balance += 3; baker.balance -= 3;
+    emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${flourSettlement.mode}${settlementDetails(flourSettlement)}`, flourSettlement.mode, { amount: 2, unitPrice: 3, txHash: flourSettlement.txHash ?? "", explorer: flourSettlement.explorerUrl ?? "" }));
+  } else emit(event(tickNumber, "blocked", "farmer", "fair flour transfer skipped because farmer needs more USDC", "LOCAL RULE", { reason: "fund the farmer testnet wallet before the next story" }));
   baker.inventory.flour = 0; baker.inventory.bread = (baker.inventory.bread ?? 0) + 4;
   emit(event(tickNumber, "produced", "baker", "baker baked 4 bread", "LOCAL RULE", { item: "bread", amount: 4 }));
-  const breadSettlement = await adapter.transferToken("merchant", "baker", "2000000");
-  merchant.inventory.bread = (merchant.inventory.bread ?? 0) + 2; baker.inventory.bread -= 2; merchant.balance -= 2; baker.balance += 2;
-  emit(event(tickNumber, "settled", "merchant", `merchant bought bread at 1.00 USDC each via ${breadSettlement.mode}${settlementDetails(breadSettlement)}`, breadSettlement.mode, { item: "bread", amount: 2, unitPrice: 1, txHash: breadSettlement.txHash ?? "", explorer: breadSettlement.explorerUrl ?? "" }));
+  if (await canTransfer("merchant", "2000000")) {
+    const breadSettlement = await adapter.transferToken("merchant", "baker", "2000000");
+    merchant.inventory.bread = (merchant.inventory.bread ?? 0) + 2; baker.inventory.bread -= 2; merchant.balance -= 2; baker.balance += 2;
+    emit(event(tickNumber, "settled", "merchant", `merchant bought bread at 1.00 USDC each via ${breadSettlement.mode}${settlementDetails(breadSettlement)}`, breadSettlement.mode, { item: "bread", amount: 2, unitPrice: 1, txHash: breadSettlement.txHash ?? "", explorer: breadSettlement.explorerUrl ?? "" }));
+  } else emit(event(tickNumber, "blocked", "merchant", "bread transfer skipped because merchant needs more USDC", "LOCAL RULE", { reason: "fund the merchant testnet wallet before the next story" }));
   await persist();
   return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() };
 }

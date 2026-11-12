@@ -1,9 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-
-const FloatingIslandDiorama = dynamic(() => import("./floating-island"), { ssr: false });
+import FloatingIslandDiorama from "./floating-island";
 
 export default function FloatingIslandClient() {
   const pathname = usePathname();
