@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "setup:env": "tsx scripts/setup-env.ts",
     "check:secrets": "tsx scripts/check-secrets.ts",
     "make-account": "tsx scripts/make-account.ts",
     "check-balance": "tsx scripts/check-balance.ts",

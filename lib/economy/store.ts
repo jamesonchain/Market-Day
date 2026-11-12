@@ -67,7 +67,7 @@ export async function runStoryBeat() {
   baker.inventory.flour = 0;
   emit(event(tickNumber, "need", "baker", "baker has run out of flour", "LOCAL RULE", { item: "flour", amount: 0 }));
   emit(event(tickNumber, "bid", "baker", "baker posts a flour bid in the square", "LOCAL RULE", { amount: 2, fairPrice: 3 }));
-  emit(event(tickNumber, "offer", "farmer", "farmer offers 2 flour at 3 USDC each", "LOCAL RULE", { unitPrice: 3 }));
+    emit(event(tickNumber, "offer", "farmer", "farmer offers 2 flour at 3.00 USDC each", "LOCAL RULE", { unitPrice: 3 }));
   emit(event(tickNumber, "offer", "farmerTwo", "farmer two offers 2 flour at 12 USDC each", "LOCAL RULE", { unitPrice: 12 }));
   emit(event(tickNumber, "offer", "miller", "miller offers 2 flour at 4 USDC each", "LOCAL RULE", { unitPrice: 4 }));
   const overcharge = checkSpendingPolicy({ buyer: "baker", seller: "farmerTwo", item: "flour", amount: 2, unitPrice: 12, spentToday: 0 }, undefined, 3);
