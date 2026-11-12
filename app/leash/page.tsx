@@ -1,2 +1,2 @@
-import MarketConsole from "@/components/market-console";
-export default function LeashPage() { return <MarketConsole page="leash" />; }
+import { redirect } from "next/navigation";
+export default function LeashPage() { redirect("/?panel=leash"); }

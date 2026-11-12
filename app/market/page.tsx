@@ -1,2 +1,2 @@
-import MarketConsole from "@/components/market-console";
-export default function MarketPage() { return <MarketConsole page="market" />; }
+import { redirect } from "next/navigation";
+export default function MarketPage() { redirect("/?panel=market"); }

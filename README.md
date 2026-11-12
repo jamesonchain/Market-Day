@@ -1,6 +1,6 @@
 # Marketday
 
-Marketday is a floating island market where five autonomous villagers farm, mill, bake, and trade. The village has a deterministic spending leash, a live event feed, free agent providers, and a clean observer mode.
+Marketday is a compact console for watching five autonomous villagers farm, mill, bake, and trade on NEAR testnet. The village has a deterministic spending leash, a live event ledger, free agent providers, and a clean guest mode.
 
 The honest demo boundary is simple: real value movement is NEAR testnet USDC only. Pricing can show a free `INTENTS QUOTE (MAINNET DATA)` dry quote, which is pricing data only and never a settlement. When testnet credentials are absent, the whole village runs on a simulated `DEMO LEDGER`.
 
@@ -19,12 +19,12 @@ The honest demo boundary is simple: real value movement is NEAR testnet USDC onl
 
 ## The 60 second demo
 
-1. Open `/` and wait for the island HUD to show the current mode.
+1. Open `/` and wait for the console to show the current mode.
 2. Open the scenarios dock and press `Run the story`.
 3. Watch the baker run out of flour, compare offers, block the overcharge, and settle the fair offer.
 4. Read the feed. Real settlements say `TESTNET TRANSFER` and include a testnet explorer link. Simulated events say `DEMO LEDGER` or `LOCAL RULE`.
 5. Press `Trigger an overcharge` to show the deterministic leash.
-6. Open `/status` for account balances, testnet links, LLM usage, and the environment checklist.
+6. Open the status tab from the mode pill for account balances, testnet links, LLM usage, and the environment checklist.
 7. Open `/record` for a chrome free capture view.
 
 ## Quick start
@@ -49,7 +49,7 @@ The seed command creates `baker.marketday.testnet`, `farmer.marketday.testnet`, 
 
 ## Routes
 
-`/` is the floating island and live feed. `/login` supports guest watch and optional GitHub login. `/market` shows bids, offers, and recent trades. `/leash` edits the local spending rules. `/status` shows mode, balances, links, LLM usage, and environment readiness. `/about` explains the real versus simulated boundary and roadmap. `/record` is a chrome free capture view.
+`/` is the console and live feed. `/login` supports guest watch and optional GitHub login. `/market`, `/leash`, and `/status` redirect to the console with the matching tab open. `/about` explains the real versus simulated boundary and roadmap. `/record` is a chrome free capture view.
 
 ## Architecture
 

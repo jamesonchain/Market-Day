@@ -1,3 +1,2 @@
-export default function RecordPage() {
-  return null;
-}
+import Link from "next/link";
+export default function RecordPage() { return <main className="simple-page record-page"><Link className="wordmark" href="/">MARKETDAY</Link><p className="simple-kicker">FIELD RECORD</p><h1>Marketday, recorded.</h1><p className="simple-copy">This route is reserved for the short story record. It contains no wallet action and no mainnet activity.</p><Link className="simple-link" href="/">BACK TO CONSOLE</Link></main>; }
