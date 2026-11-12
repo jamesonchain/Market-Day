@@ -19,6 +19,7 @@ let hydrated: Promise<void> | null = null;
 
 function emit(event: EconomyEvent) { events = [...events.slice(-99), event]; listeners.forEach((listener) => listener(event)); return event; }
 function event(tick: number, type: EconomyEvent["type"], actor: AgentRole, message: string, label: EconomyEvent["label"], data?: EconomyEvent["data"]): EconomyEvent { return { id: crypto.randomUUID(), tick, at: new Date().toISOString(), type, actor, message, label, data }; }
+function settlementDetails(settlement: { txHash?: string; explorerUrl?: string }) { return settlement.txHash ? ` transaction ${settlement.txHash} ${settlement.explorerUrl ?? ""}` : ""; }
 
 export function getAgents() { return roles.map((role) => agents.get(role)!); }
 export function getEvents() { return events; }
@@ -49,7 +50,7 @@ export async function runTick() {
     agents.get("farmer")!.inventory.wheat = Math.max(0, (agents.get("farmer")!.inventory.wheat ?? 0) - 2);
     baker.balance -= 3;
     agents.get("farmer")!.balance += 3;
-    emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${settlement.mode}`, settlement.mode, { amount: 3, token: "USDC" }));
+    emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${settlement.mode}${settlementDetails(settlement)}`, settlement.mode, { amount: 3, token: "USDC", txHash: settlement.txHash ?? "", explorer: settlement.explorerUrl ?? "" }));
   } else {
     const miller = agents.get("miller")!;
     miller.inventory.flour = (miller.inventory.flour ?? 0) + 1;
@@ -75,12 +76,12 @@ export async function runStoryBeat() {
   const adapter = getSettlementAdapter();
   const flourSettlement = await adapter.transferToken("farmer", "baker", "6000000");
   farmer.inventory.wheat = Math.max(0, (farmer.inventory.wheat ?? 0) - 2); baker.inventory.flour = 2; farmer.balance += 6; baker.balance -= 6;
-  emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${flourSettlement.mode}`, flourSettlement.mode, { amount: 2, unitPrice: 3 }));
+  emit(event(tickNumber, "settled", "baker", `fair flour offer settled via ${flourSettlement.mode}${settlementDetails(flourSettlement)}`, flourSettlement.mode, { amount: 2, unitPrice: 3, txHash: flourSettlement.txHash ?? "", explorer: flourSettlement.explorerUrl ?? "" }));
   baker.inventory.flour = 0; baker.inventory.bread = (baker.inventory.bread ?? 0) + 4;
   emit(event(tickNumber, "produced", "baker", "baker baked 4 bread", "LOCAL RULE", { item: "bread", amount: 4 }));
   const breadSettlement = await adapter.transferToken("merchant", "baker", "8000000");
   merchant.inventory.bread = (merchant.inventory.bread ?? 0) + 2; baker.inventory.bread -= 2; merchant.balance -= 8; baker.balance += 8;
-  emit(event(tickNumber, "settled", "merchant", `merchant bought bread via ${breadSettlement.mode}`, breadSettlement.mode, { item: "bread", amount: 2, unitPrice: 4 }));
+  emit(event(tickNumber, "settled", "merchant", `merchant bought bread via ${breadSettlement.mode}${settlementDetails(breadSettlement)}`, breadSettlement.mode, { item: "bread", amount: 2, unitPrice: 4, txHash: breadSettlement.txHash ?? "", explorer: breadSettlement.explorerUrl ?? "" }));
   await persist();
   return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() };
 }

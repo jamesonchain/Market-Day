@@ -47,7 +47,7 @@ npx tsx scripts/seed-agents.ts
 npm run check:secrets
 ```
 
-The seed script writes generated agent keys to ignored `.env.local`. Run `npm run dev` and open `/status` to confirm `REAL TESTNET`. If credentials are absent, confirm `DEMO MODE` instead.
+The seed script writes generated agent keys to ignored `.near-agents.json` and to `NEAR_AGENT_PRIVATE_KEYS_JSON` in `.env.local`. Copy that server only variable into Vercel. Run `npm run dev` and open `/status` to confirm `REAL TESTNET`. If credentials are absent, confirm `DEMO MODE` instead.
 
 ## 7. Deploy on Vercel
 

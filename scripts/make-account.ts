@@ -22,8 +22,9 @@ const privateKey = keyPair.toString();
 const accountId = implicitAccountId(keyPair.getPublicKey().data);
 console.log(`NEAR implicit account: ${accountId}`);
 console.log(`Public key: ${publicKey}`);
-console.log(`Private key: ${privateKey}`);
 if (process.argv.includes("--write-env")) {
   await writeEnv(accountId, privateKey);
-  console.log("Wrote NEAR_PARENT_ACCOUNT_ID and NEAR_PARENT_PRIVATE_KEY to .env.local");
+  console.log("Wrote the parent account and private key to ignored .env.local without printing the private key");
+} else {
+  console.log("Run again with --write-env to save the private key to ignored .env.local without printing it");
 }

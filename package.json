@@ -13,6 +13,7 @@
     "check:secrets": "tsx scripts/check-secrets.ts",
     "make-account": "tsx scripts/make-account.ts",
     "check-balance": "tsx scripts/check-balance.ts",
+    "doctor": "tsx scripts/doctor.ts",
     "seed.agents": "tsx scripts/seed-agents.ts",
     "seed:agents": "tsx scripts/seed-agents.ts",
     "video:preview": "cd marketday-videos && node scripts/build-video-props.mjs && npx --yes hyperframes@0.9.7 preview",
