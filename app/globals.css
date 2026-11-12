@@ -1,71 +1,44 @@
 @import "tailwindcss";
 
-:root { --clay: #E9D8C4; --coral: #E8654F; --grass: #7FA86B; --teal: #1D4E5A; --gold: #F6B93B; --ink: #14172B; --soft: #FFF6EA; --vermilion: #FF3D2E; }
+:root {
+  --bg: #F3F4F6;
+  --panel: #FFFFFF;
+  --ink: #12151B;
+  --muted: #5B6472;
+  --line: #E2E5EA;
+  --map: #E9ECE6;
+  --road: #FFFFFF;
+  --bld: #D3D9E1;
+  --tree: #BCD5BE;
+  --accent: #1F4DFF;
+  --ok: #0E8A5F;
+  --bad: #D92D20;
+  --chip: #EEF0F4;
+  --sans: Geist, system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C0E12;
+    --panel: #14171D;
+    --ink: #EEF0F3;
+    --muted: #8B94A3;
+    --line: #252A33;
+    --map: #151A1A;
+    --road: #1E242B;
+    --bld: #262D37;
+    --tree: #1F3226;
+    --accent: #7B97FF;
+    --ok: #38C793;
+    --bad: #FF6B5E;
+    --chip: #1C2028;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] { color-scheme: dark; --bg: #0C0E12; --panel: #14171D; --ink: #EEF0F3; --muted: #8B94A3; --line: #252A33; --map: #151A1A; --road: #1E242B; --bld: #262D37; --tree: #1F3226; --accent: #7B97FF; --ok: #38C793; --bad: #FF6B5E; --chip: #1C2028; }
 * { box-sizing: border-box; }
-html, body { margin: 0; min-height: 100%; background: #141631; }
-body { overflow-x: hidden; }
-.route-content { position: relative; z-index: 20; min-height: 100dvh; isolation: isolate; background: linear-gradient(180deg, transparent 0%, rgba(20,22,49,.16) 55%, rgba(20,22,49,.38) 100%); }
-.route-content > * { position: relative; z-index: 1; }
-.route-content .diorama-page > .relative { position: relative; z-index: 2; }
-body { color: var(--soft); font-family: Geist, ui-sans-serif, system-ui, sans-serif; }
-button, a { font: inherit; }
-.diorama-page { isolation: isolate; min-height: 100dvh; position: relative; }
-.diorama-sky { position: fixed; inset: 0; z-index: -2; background: linear-gradient(180deg, #141631 0%, #4B3A7A 42%, #E8718D 75%, #FFB38A 100%); }
-.diorama-sky::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 88%, rgba(255,246,234,.2), transparent 32%), linear-gradient(90deg, rgba(20,22,49,.18), transparent 30%, transparent 70%, rgba(20,22,49,.2)); }
-.diorama-canvas-layer { position: fixed; inset: 0; z-index: 0; width: 100vw; height: 100dvh; pointer-events: auto; }
-.diorama-canvas-layer canvas { display: block; width: 100%; height: 100%; }
-.diorama-header, .diorama-footer, .diorama-status, .diorama-feed, .diorama-nav { position: fixed; z-index: 12; }
-.diorama-header { inset: 0 0 auto; display: flex; justify-content: space-between; align-items: flex-start; padding: 2.25rem 3.5rem; pointer-events: none; }
-.diorama-header-copy, .diorama-nav, .diorama-nav a, .diorama-footer button { pointer-events: auto; }
-.diorama-header-copy { width: min(38vw, 520px); }
-.diorama-nav { top: 2.25rem; right: 3.5rem; display: flex; gap: .5rem; }
-.diorama-kicker { color: var(--gold); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
-.diorama-title { color: var(--soft); font-family: "Bricolage Grotesque", ui-sans-serif, sans-serif; font-size: clamp(2.5rem, 6vw, 5.6rem); font-weight: 700; letter-spacing: -.07em; line-height: .9; max-width: 720px; }
-.diorama-subtitle { color: rgba(255,246,234,.76); font-size: clamp(.85rem, 1.2vw, 1rem); max-width: 370px; }
-.diorama-pill { border: 1px solid rgba(255,246,234,.26); border-radius: 999px; background: rgba(20,23,43,.28); color: var(--soft); padding: 8px 12px; font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(6px); }
-.diorama-pill:hover { background: rgba(255,246,234,.16); }
-.diorama-status, .diorama-feed { font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .05em; text-transform: uppercase; }
-.diorama-status { bottom: 22px; left: 3.5rem; display: flex; align-items: center; gap: 8px; color: rgba(255,246,234,.84); }
-.diorama-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); }
-.diorama-renderer { color: rgba(255,246,234,.5); margin-left: 8px; }
-.diorama-feed { right: 3.5rem; bottom: 3.5rem; width: min(270px, 38vw); padding: 1rem 1.2rem; color: rgba(255,246,234,.72); line-height: 1.65; text-align: right; background: linear-gradient(90deg, transparent, rgba(20,22,49,.34)); }
-.diorama-feed span { color: var(--gold); }
-.diorama-feed small { color: rgba(255,246,234,.45); }
-.diorama-footer { left: 3.5rem; right: 3.5rem; bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .08em; color: rgba(255,246,234,.65); pointer-events: none; }
-.scene-placeholder { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 1rem; color: rgba(255,246,234,.68); font-family: "Geist Mono", ui-monospace, monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
-.scene-placeholder-orbit { width: 48px; height: 48px; border: 1px solid rgba(255,246,234,.5); border-radius: 50%; border-top-color: var(--gold); animation: scene-orbit 1.6s linear infinite; }
-.scene-placeholder canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.scene-placeholder span { position: relative; z-index: 1; }
-.leash-tag, .villager-bubble { max-width: 180px; overflow-wrap: anywhere; border-radius: 10px; padding: 7px 10px; color: var(--soft); background: rgba(255,61,46,.94); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; line-height: 1.25; box-shadow: 0 8px 24px rgba(20,22,49,.28); white-space: normal; }
-.villager-bubble { min-width: 48px; max-width: 120px; color: var(--ink); background: rgba(255,246,234,.95); text-align: center; white-space: nowrap; }
-.villager-drawer { position: fixed; z-index: 30; top: 1rem; right: 1rem; width: min(320px, calc(100vw - 2rem)); padding: 1.3rem; border: 1px solid rgba(255,246,234,.25); border-radius: 18px; background: rgba(20,23,43,.86); color: var(--soft); box-shadow: 0 20px 60px rgba(20,22,49,.38); backdrop-filter: blur(16px); font-family: "Geist Mono", ui-monospace, monospace; font-size: 11px; line-height: 1.7; }
-.villager-drawer h2 { margin: .5rem 0; color: var(--gold); font-family: "Bricolage Grotesque", ui-sans-serif, sans-serif; font-size: 2rem; text-transform: uppercase; }
-.villager-drawer button { float: right; border: 0; background: none; color: var(--gold); cursor: pointer; font-family: inherit; font-size: 9px; }
-@keyframes scene-orbit { to { transform: rotate(360deg); } }
-@media (max-width: 700px) { .diorama-header { padding: 1.2rem 1rem; } .diorama-header-copy { width: 68vw; } .diorama-nav { top: 1.2rem; right: 1rem; } .diorama-nav .diorama-pill:first-child { display: none; } .diorama-title { font-size: clamp(2.5rem, 14vw, 4.2rem); max-width: 280px; } .diorama-subtitle { max-width: 240px; } .diorama-feed { right: 1rem; bottom: 4.5rem; width: 190px; font-size: 8px; } .diorama-status { left: 1rem; bottom: 1rem; font-size: 8px; } .diorama-renderer { display: none; } .diorama-footer { left: 1rem; right: 1rem; bottom: .45rem; font-size: 8px; } }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
-.console-page { min-height: 100dvh; position: relative; color: var(--soft); overflow: hidden; }
-.console-sky { position: fixed; inset: 0; background: linear-gradient(145deg, #141631, #4B3A7A 58%, #E8718D); z-index: -1; }
-.console-sky::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 80% 15%, rgba(246,185,59,.16), transparent 30%); }
-.console-nav { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem clamp(1rem, 5vw, 4rem); border-bottom: 1px solid rgba(255,246,234,.14); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; }
-.console-nav div { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: flex-end; }
-.console-nav a { color: rgba(255,246,234,.7); text-decoration: none; }
-.console-nav a:hover { color: var(--gold); }
-.console-brand { color: var(--gold) !important; font-weight: 700; }
-.console-wrap { position: relative; z-index: 2; width: min(1100px, calc(100% - 2rem)); margin: 0 auto; padding: 4rem 0 7rem; }
-.console-title { max-width: 720px; margin: .8rem 0 2.5rem; font-family: "Bricolage Grotesque", ui-sans-serif, sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); line-height: .9; letter-spacing: -.07em; }
-.console-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, .8fr); gap: 1rem; align-items: start; }
-.console-card { border: 1px solid rgba(255,246,234,.18); border-radius: 20px; padding: 1.3rem; background: rgba(20,23,43,.54); box-shadow: 0 20px 60px rgba(20,22,49,.2); backdrop-filter: blur(12px); }
-.console-card.wide { min-height: 360px; }
-.console-label { color: var(--gold); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .15em; }
-.console-gap { margin-top: 2rem; }
-.offer, .trade, .check { display: grid; grid-template-columns: 1fr 1fr auto; gap: .8rem; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(255,246,234,.1); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; }
-.offer strong { color: var(--soft); } .offer em { color: var(--gold); font-style: normal; text-align: right; }
-.trade { grid-template-columns: 100px 1fr auto; color: rgba(255,246,234,.78); } .trade small { color: var(--gold); text-align: right; }
-.scenario-dock { display: grid; gap: .7rem; } .scenario-dock button, .danger-button { border: 1px solid rgba(246,185,59,.38); border-radius: 999px; padding: .75rem 1rem; background: rgba(246,185,59,.08); color: var(--soft); text-align: left; font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; cursor: pointer; } .scenario-dock button:hover, .danger-button:hover { background: rgba(246,185,59,.2); }
-.scenario-dock small, .fine-print { color: rgba(255,246,234,.58); font-size: 11px; line-height: 1.6; }
-.leash-form { display: grid; gap: 1.2rem; } .leash-form label { display: grid; gap: .4rem; color: rgba(255,246,234,.7); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; } .leash-form input { width: 100%; border: 1px solid rgba(255,246,234,.2); border-radius: 8px; padding: .7rem; background: rgba(20,22,49,.55); color: var(--soft); }
-.danger-button { color: #ffd9d0; border-color: rgba(255,61,46,.55); background: rgba(255,61,46,.14); }
-.status-mode { margin: .6rem 0; color: var(--gold); font-family: "Geist Mono", ui-monospace, monospace; font-size: 2rem; } .status-number { font-size: 3rem; color: var(--gold); } .check { grid-template-columns: 42px 1fr; } .check span { color: var(--gold); }
-.about-table { display: grid; gap: .7rem; } .about-table > div { display: grid; gap: .25rem; border-top: 1px solid rgba(255,246,234,.12); padding-top: .7rem; } .about-table strong { color: var(--gold); font-family: "Geist Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; } .about-table span { color: rgba(255,246,234,.74); font-size: 12px; line-height: 1.5; }
-@media (max-width: 760px) { .console-grid { grid-template-columns: 1fr; } .console-wrap { padding-top: 2.5rem; } .console-nav { align-items: flex-start; gap: 1rem; } .console-nav div { max-width: 220px; } .offer, .trade { grid-template-columns: 1fr; gap: .25rem; } .offer em, .trade small { text-align: left; } }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.45; }
+button, input { font: inherit; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

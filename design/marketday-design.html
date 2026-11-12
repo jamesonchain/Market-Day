@@ -1,0 +1,97 @@
+<title>Marketday Console</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: agents rail, live village map with scenario dock, ledger and leash rail. */
+:root{--bg:#F3F4F6;--panel:#FFFFFF;--ink:#12151B;--muted:#5B6472;--line:#E2E5EA;--map:#E9ECE6;--road:#FFFFFF;--bld:#D3D9E1;--tree:#BCD5BE;--accent:#1F4DFF;--ok:#0E8A5F;--bad:#D92D20;--chip:#EEF0F4;
+--sans:'Geist',system-ui,sans-serif;--mono:'Geist Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0E12;--panel:#14171D;--ink:#EEF0F3;--muted:#8B94A3;--line:#252A33;--map:#151A1A;--road:#1E242B;--bld:#262D37;--tree:#1F3226;--accent:#7B97FF;--ok:#38C793;--bad:#FF6B5E;--chip:#1C2028;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C0E12;--panel:#14171D;--ink:#EEF0F3;--muted:#8B94A3;--line:#252A33;--map:#151A1A;--road:#1E242B;--bld:#262D37;--tree:#1F3226;--accent:#7B97FF;--ok:#38C793;--bad:#FF6B5E;--chip:#1C2028;color-scheme:dark}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+.app{padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1500px;margin:0 auto;display:grid;gap:12px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.pill{font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:999px;background:var(--chip);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.pill.live{color:var(--ok)}.sp{flex:1}
+main{display:grid;grid-template-columns:270px minmax(0,1fr) 340px;gap:12px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0}
+.ph{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:600}
+.ph small{font-family:var(--mono);font-weight:400;color:var(--muted);font-size:11px}
+.ag{display:grid;grid-template-columns:34px 1fr auto;gap:10px;padding:10px 14px;align-items:center;border-bottom:1px solid var(--line)}
+.ag:last-child{border:0}.av{width:34px;height:34px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-weight:600;font-size:12px}
+.ag b{display:block;font-weight:600}.ag span{color:var(--muted);font-size:12px}
+.bal{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.bar{height:3px;background:var(--chip);border-radius:3px;margin-top:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .5s}
+.mapwrap{position:relative;overflow:hidden}
+svg{display:block;width:100%;height:auto;background:var(--map)}
+.dock{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line);align-items:center}
+button{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+button.p{background:var(--ink);color:var(--bg);border-color:var(--ink)}button:hover{border-color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{color:var(--muted);font-size:12px;margin-left:auto}
+.feed{list-style:none;margin:0;padding:0;max-height:330px;overflow:auto}
+.feed li{padding:10px 14px;border-bottom:1px solid var(--line);display:grid;gap:3px;animation:in .3s}
+@keyframes in{from{opacity:0;transform:translateY(-4px)}}
+.row{display:flex;gap:8px;align-items:center}
+.tag{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:4px;letter-spacing:.05em;background:var(--chip);color:var(--muted)}
+.tag.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}.tag.bad{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.amt{margin-left:auto;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.hash{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.leash{padding:14px;display:grid;gap:12px}
+.leash label{display:grid;gap:6px;font-size:12px;color:var(--muted)}.leash label b{color:var(--ink);font-family:var(--mono)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.empty{padding:18px 14px;color:var(--muted)}
+.ring{fill:none;stroke:var(--bad);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:ping 1.2s ease-out 2}
+@keyframes ping{from{transform:scale(.6);opacity:1}to{transform:scale(2.2);opacity:0}}
+.t{font:500 11px var(--mono);fill:var(--muted)}
+@media(max-width:1000px){main{grid-template-columns:1fr}.hint{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<div class="app">
+<header><span class="brand">Marketday</span><span class="pill live">Testnet</span><span class="pill">Sample data</span><span class="sp"></span><span class="pill" id="clock">Block 277,424,120</span></header>
+<main>
+<section class="panel"><div class="ph">Villagers <small>USDC</small></div><div id="agents"></div></section>
+<section class="panel mapwrap">
+<svg viewBox="0 0 800 520" role="img" aria-label="Top down map of the village with five agents">
+<defs><pattern id="crop" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 5H10" stroke="var(--tree)" stroke-width="3"/></pattern></defs>
+<path d="M0 270H800M400 0V520M120 300V520" stroke="var(--road)" stroke-width="30" fill="none"/>
+<circle cx="400" cy="270" r="58" fill="var(--road)"/><circle cx="400" cy="270" r="30" fill="var(--bld)"/><text class="t" x="400" y="274" text-anchor="middle">SQUARE</text>
+<rect x="60" y="80" width="170" height="120" rx="10" fill="var(--bld)"/><text class="t" x="72" y="98">BAKERY</text>
+<rect x="520" y="70" width="210" height="130" rx="10" fill="url(#crop)" stroke="var(--tree)"/><text class="t" x="532" y="90">FARM A</text>
+<rect x="60" y="340" width="150" height="120" rx="10" fill="var(--bld)"/><text class="t" x="72" y="358">MILL</text>
+<rect x="520" y="340" width="210" height="120" rx="10" fill="var(--bld)"/><text class="t" x="532" y="358">MARKET STALL</text>
+<rect x="290" y="390" width="200" height="100" rx="10" fill="url(#crop)" stroke="var(--tree)"/><text class="t" x="302" y="408">FARM B</text>
+<g fill="var(--tree)"><circle cx="270" cy="150" r="14"/><circle cx="290" cy="170" r="10"/><circle cx="760" cy="250" r="12"/><circle cx="40" cy="260" r="12"/><circle cx="250" cy="430" r="13"/></g>
+<g id="links"></g><g id="nodes"></g><g id="fx"></g>
+</svg>
+<div class="dock"><button class="p" id="run">Run the story</button><button id="over">Try an overcharge</button><button id="reset">Reset</button><span class="hint">Flour fair price: 3.00 USDC (live quote)</span></div>
+</section>
+<aside style="display:grid;gap:12px">
+<section class="panel"><div class="ph">Ledger <small id="count">0 events</small></div><ul class="feed" id="feed"><li class="empty">No activity yet. Run the story to see villagers trade.</li></ul></section>
+<section class="panel"><div class="ph">Spending rules <small>Baker</small></div><div class="leash">
+<label>Max price per item <b id="mpv">4.00 USDC</b><input id="mp" type="range" min="1" max="10" step="0.5" value="4"></label>
+<label>Daily limit <b>10.00 USDC</b><input type="range" min="2" max="20" value="10" disabled></label>
+<label>Allowed partners <b>3 of 4</b></label></div></section>
+</aside>
+</main></div>
+<script>
+const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const base={baker:{n:'Baker',r:'Bakery',x:145,y:235,b:12.4},mill:{n:'Miller',r:'Mill',x:135,y:400,b:8.1},farmA:{n:'Farmer A',r:'Farm',x:610,y:235,b:9.6},farmB:{n:'Farmer B',r:'Farm',x:395,y:445,b:7.3},shop:{n:'Merchant',r:'Stall',x:625,y:400,b:15}};
+let A,events=0,busy=false;const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+function reset(){A=JSON.parse(JSON.stringify(base));events=0;$('feed').innerHTML='<li class="empty">No activity yet. Run the story to see villagers trade.</li>';$('count').textContent='0 events';$('fx').innerHTML='';draw()}
+function draw(){const n=$('nodes');n.innerHTML='';$('agents').innerHTML='';for(const k in A){const a=A[k],g=el('g',{},n);el('circle',{cx:a.x,cy:a.y,r:13,fill:'var(--ink)'},g);el('text',{x:a.x,y:a.y+4,'text-anchor':'middle',fill:'var(--bg)','font-size':11,'font-weight':600},g).textContent=a.n[0];el('text',{x:a.x,y:a.y+30,'text-anchor':'middle',class:'t'},g).textContent=a.n;
+const d=document.createElement('div');d.className='ag';d.innerHTML=`<div class="av">${a.n[0]}</div><div><b>${a.n}</b><span>${a.r}</span><div class="bar"><i style="width:${Math.min(100,(base[k].b-a.b>0?(base[k].b-a.b)/10*100:0))}%"></i></div></div><div class="bal">${a.b.toFixed(2)}</div>`;$('agents').appendChild(d)}}
+function log(tag,kind,text,amt,hash){if(!events)$('feed').innerHTML='';events++;$('count').textContent=events+' events';const li=document.createElement('li');li.innerHTML=`<div class="row"><span class="tag ${kind}">${tag}</span><span>${text}</span><span class="amt">${amt||''}</span></div>${hash?`<span class="hash">tx ${hash}</span>`:''}`;$('feed').prepend(li)}
+const hx=()=>Array.from({length:4},()=>'abcdef0123456789'[Math.random()*16|0]).join('')+'…'+Array.from({length:4},()=>'abcdef0123456789'[Math.random()*16|0]).join('');
+function bubble(k,text,bad){const a=A[k],w=text.length*6.4+18,g=el('g',{},$('fx'));el('rect',{x:a.x-w/2,y:a.y-52,width:w,height:24,rx:6,fill:bad?'var(--bad)':'var(--ink)'},g);el('text',{x:a.x,y:a.y-36,'text-anchor':'middle',fill:'#fff','font-size':11,'font-weight':500},g).textContent=text;setTimeout(()=>g.remove(),2600)}
+function fly(f,t,done){const a=A[f],b=A[t],c=el('circle',{r:6,fill:'var(--accent)'},$('fx')),s=performance.now();(function s2(n){const p=Math.min(1,(n-s)/900),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;c.setAttribute('cx',a.x+(b.x-a.x)*e);c.setAttribute('cy',a.y+(b.y-a.y)*e-40*Math.sin(Math.PI*p));p<1?requestAnimationFrame(s2):(c.remove(),done&&done())})(s)}
+function block(k){const a=A[k];const r=el('circle',{class:'ring',cx:a.x,cy:a.y,r:16},$('fx'));setTimeout(()=>r.remove(),2600)}
+function pay(f,t,amt,what){return new Promise(r=>fly(f,t,()=>{A[f].b-=amt;A[t].b+=amt;draw();log('SETTLED','ok',`${A[f].n} paid ${A[t].n} for ${what}`,'−'+amt.toFixed(2),hx());r()}))}
+function offer(k,price){const max=+$('mp').value;bubble(k,price.toFixed(2)+' USDC');if(price>max){block('baker');bubble('baker','Blocked',true);log('BLOCKED','bad',`${A[k].n} asked ${price.toFixed(2)}. Limit is ${max.toFixed(2)}`,price.toFixed(2));return false}return true}
+async function story(){if(busy)return;busy=true;reset();log('QUOTE','',`Flour fair price 3.00 USDC`,'3.00');await sleep(700);log('NEED','',`Baker is out of flour`);bubble('baker','Need 10 flour');await sleep(1300);offer('farmB',9);await sleep(1700);offer('farmA',3.4);await sleep(900);const ok=offer('mill',3);await sleep(1500);if(ok)await pay('baker','mill',3,'flour');await sleep(500);log('DONE','',`Baker baked 20 loaves`);bubble('baker','Baking…');await sleep(1200);await pay('shop','baker',2.5,'bread');busy=false}
+async function overcharge(){if(busy)return;busy=true;bubble('farmB','Flour 9.00 USDC');await sleep(900);offer('farmB',9);await sleep(2400);busy=false}
+$('run').onclick=story;$('over').onclick=overcharge;$('reset').onclick=()=>{if(!busy)reset()};
+$('mp').oninput=e=>{$('mpv').textContent=(+e.target.value).toFixed(2)+' USDC'};
+reset();setInterval(()=>{const n=277424120+Math.floor((Date.now()/1000)%9999);$('clock').textContent='Block '+n.toLocaleString('en-US')},1300);
+</script>
