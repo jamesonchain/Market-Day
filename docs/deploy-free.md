@@ -1,74 +1,147 @@
 # Free testnet deployment
 
-Marketday is testnet only. The app has two runtime modes:
+Marketday is testnet only. It has two modes:
 
-- `DEMO MODE` when the parent account and token contract are absent. The village uses a simulated ledger.
-- `REAL TESTNET` when the parent account, private key, testnet token contract, and seeded agent keys are present. Only testnet transfers can happen.
+- `DEMO MODE` uses a simulated ledger and works without external credentials.
+- `REAL TESTNET` requires a funded `marketday.testnet` parent and seeded testnet agents. Only testnet NEAR and USDC actions are enabled.
 
-## 1. Install and create the parent account
+## 1. Create the local environment
+
+From the repository root:
 
 ```bash
 npm install
+npm run setup:env
+```
+
+`setup:env` reads `.env.example`, copies safe non secret defaults, generates `CRON_SECRET` and `AUTH_SECRET` if absent, and reports missing values without printing secrets.
+
+## 2. Create and fund the parent account
+
+Generate a keypair and write the parent values to ignored `.env.local`:
+
+```bash
 npx tsx scripts/make-account.ts --write-env
 ```
 
-This writes `NEAR_PARENT_ACCOUNT_ID` and `NEAR_PARENT_PRIVATE_KEY` to ignored `.env.local`. Never paste the private key into a client variable or commit it.
+The requested named parent is `marketday.testnet`. If the account is not present yet, create or fund it on NEAR testnet, then request testnet NEAR from the faucet at `https://near-faucet.io/`.
 
-## 2. Fund the testnet account
+The USDC contract variable is `NEAR_USDC_CONTRACT_ID`. The value in `.env.example` is the six decimal testnet USDC contract used by this demo. To verify it, open `https://testnet.nearblocks.io`, open the `marketday.testnet` address, select the `Tokens` tab, and copy the USDC contract ID into `.env.local`.
 
-Use the NEAR testnet faucet at `https://near-faucet.io/` or the current faucet linked from the NEAR testnet docs. Paste the implicit account ID printed by `make-account` and request testnet NEAR. Set the testnet USDC contract in `.env.local` using the token address supplied by the faucet or hackathon instructions.
-
-Check balances with:
+Check the parent before seeding:
 
 ```bash
 npx tsx scripts/check-balance.ts
 ```
 
-## 3. Add a free AI key
+## 3. Create the five testnet agents
 
-Create a free Gemini key in Google AI Studio at `https://aistudio.google.com/app/apikey`. Put it in `.env.local` as `GEMINI_API_KEY`. Groq is optional. If both are absent, the deterministic rule brain runs without network calls or cost.
-
-## 4. Configure Supabase
-
-Create a free Supabase project at `https://supabase.com/`. Open SQL Editor and run [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql). Copy the project URL to `SUPABASE_URL` and the service role key to `SUPABASE_SERVICE_ROLE_KEY`. These are server only values.
-
-## 5. Configure observer login
-
-For GitHub login, create an OAuth app in GitHub Developer Settings. Set the callback URL to `https://YOUR_VERCEL_DOMAIN/api/auth/callback/github`. Add `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`, and a random `AUTH_SECRET`. Leave Google variables blank unless Google OAuth is also configured. Blank providers stay hidden and guest watch remains available.
-
-## 6. Prepare local environment
-
-Copy `.env.example` to `.env.local`, then fill the values you need. Keep the FastNear testnet RPC, set `NEAR_USDC_CONTRACT_ID`, and keep all private values server only.
-
-Seed the five testnet agent subaccounts after the parent has testnet NEAR:
+After the parent has at least 0.3 NEAR available for each account and enough USDC for starting balances:
 
 ```bash
-npx tsx scripts/seed-agents.ts
-npm run check:secrets
+npm run seed:agents
+npm run doctor
 ```
 
-The seed script writes generated agent keys to ignored `.near-agents.json` and to `NEAR_AGENT_PRIVATE_KEYS_JSON` in `.env.local`. Copy that server only variable into Vercel. Run `npm run dev` and open `/status` to confirm `REAL TESTNET`. If credentials are absent, confirm `DEMO MODE` instead.
+The seed command creates these named accounts under the parent, funds each with 0.3 NEAR, registers USDC storage, and targets 3.00 USDC per agent:
 
-## 7. Deploy on Vercel
+```text
+baker.marketday.testnet
+farmer.marketday.testnet
+farmer2.marketday.testnet
+miller.marketday.testnet
+merchant.marketday.testnet
+```
+
+It is safe to rerun. Existing accounts and storage registrations are reused, and agents already at or above 3.00 USDC are not funded again. Keys are written only to ignored `.near-agents.json` and the server only `NEAR_AGENT_PRIVATE_KEYS_JSON` line in `.env.local`. Never print or commit either file.
+
+`doctor` checks the parent, every agent, USDC storage registration, balances, the configured Gemini key, and database mode. Each item prints `PASS` or `FIX` with a repair instruction.
+
+## 4. Add a free AI Studio key
+
+Create a free key at `https://aistudio.google.com/app/apikey` and set:
+
+```text
+GEMINI_API_KEY=your_key
+GEMINI_MODEL=gemini-3.5-flash-lite
+```
+
+Groq is optional. The provider order is Gemini, Groq, then deterministic rules. If no key is present, the app still works without network calls or cost.
+
+## 5. Optional Supabase persistence
+
+Create a free project at `https://supabase.com/`. In SQL Editor, run [`supabase/migrations/001_init.sql`](../supabase/migrations/001_init.sql). Set:
+
+```text
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+Without these values, local mode uses in memory persistence. Vercel production should use Supabase.
+
+## 6. Optional GitHub OAuth
+
+Create an OAuth app in GitHub Developer Settings. Use this callback:
+
+```text
+https://YOUR_VERCEL_DOMAIN/api/auth/callback/github
+```
+
+Set `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`, and the generated `AUTH_SECRET`. Google OAuth is optional and uses `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` with the same Auth.js callback pattern. If either provider is incomplete, it stays hidden and guest watch mode remains available.
+
+## 7. Deploy to Vercel
 
 1. Push the repository to GitHub.
-2. Import the repository at `https://vercel.com/new`.
-3. Keep the build command as `npm run build`.
-4. Add the server variables from `.env.local` in Vercel Project Settings, Environment Variables. Do not add private values with a `NEXT_PUBLIC_` prefix.
-5. Add `CRON_SECRET` as a long random value.
-6. Deploy and open `/`, `/market`, `/leash`, `/status`, `/about`, `/login`, and `/record`.
+2. Open `https://vercel.com/new` and import the repository.
+3. Keep the install command as `npm install` and the build command as `npm run build`.
+4. Add the following server environment variables in Project Settings, Environment Variables. Add them for Production and Preview as needed.
+5. Deploy, then open `/`, `/market`, `/leash`, `/status`, `/about`, `/login`, and `/record`.
 
-The Vercel cron declaration calls `/api/cron/tick`. It requires `Authorization: Bearer CRON_SECRET` and never performs a mainnet action.
+Paste these names exactly. Leave optional values blank when you want guest and demo behavior:
 
-## 8. Optional cron-job.org backup
+```text
+GEMINI_API_KEY
+GEMINI_MODEL
+GROQ_API_KEY
+NEAR_NODE_URL
+NEAR_PARENT_ACCOUNT_ID
+NEAR_PARENT_PRIVATE_KEY
+NEAR_USDC_CONTRACT_ID
+NEAR_AGENT_STARTING_NEAR
+NEAR_AGENT_STARTING_USDC
+NEAR_AGENT_PRIVATE_KEYS_JSON
+NEAR_INTENTS_ORIGIN_ASSET
+NEAR_INTENTS_DESTINATION_ASSET
+NEAR_INTENTS_REFUND_ADDRESS
+NEAR_INTENTS_RECIPIENT
+CRON_SECRET
+AUTH_SECRET
+AUTH_GITHUB_ID
+AUTH_GITHUB_SECRET
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+SUPABASE_URL
+SUPABASE_SERVICE_ROLE_KEY
+```
 
-Create a free job at `https://cron-job.org/`:
+Never use a `NEXT_PUBLIC_` prefix for a wallet key, private key, service role key, OAuth secret, or cron secret.
 
-1. Create a new cron job for `https://YOUR_VERCEL_DOMAIN/api/cron/tick`.
+## 8. Add cron-job.org
+
+Vercel Cron or an external scheduler can call the protected route:
+
+```text
+GET https://YOUR_VERCEL_DOMAIN/api/cron/tick
+Authorization: Bearer YOUR_CRON_SECRET
+```
+
+For the free backup at `https://cron-job.org/`:
+
+1. Create a new job for the URL above.
 2. Choose every five minutes.
-3. Use method GET.
-4. Add header `Authorization` with value `Bearer YOUR_CRON_SECRET`.
-5. Save and trigger once manually. A successful response is JSON containing a tick and events.
+3. Choose GET.
+4. Add the `Authorization` header with the exact bearer value.
+5. Save and trigger once. A successful response contains a tick and events.
 
 ## Final checks
 
@@ -82,10 +155,11 @@ npm run check:secrets
 
 ## Manual steps still required
 
-- Request testnet NEAR from a faucet.
-- Confirm the testnet USDC contract address for the demo.
-- Create and enter a Gemini key if desired.
-- Create the Supabase project and run the migration.
-- Create the GitHub OAuth app if login is desired.
-- Add Vercel environment variables and deploy.
-- Add the cron-job.org backup if needed.
+- Fund `marketday.testnet` with testnet NEAR.
+- Confirm the USDC contract from the NearBlocks Tokens tab.
+- Create a Gemini key if live free model calls are desired.
+- Run `npm run seed:agents` and `npm run doctor`.
+- Create Supabase and run the migration if production persistence is needed.
+- Create GitHub OAuth if social login is wanted.
+- Paste server variables into Vercel and deploy.
+- Add cron-job.org if an external tick schedule is wanted.

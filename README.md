@@ -1,65 +1,88 @@
 # Marketday
 
-Marketday is a tiny animated village where every villager is an AI agent with a NEAR identity, wallet, needs, and deterministic spending rules. Agents farm, craft, get hungry, and trade in the market square. A visitor logs in socially and watches the village without ever seeing a wallet popup.
+Marketday is a floating island market where five autonomous villagers farm, mill, bake, and trade. The village has a deterministic spending leash, a live event feed, free agent providers, and a clean observer mode.
 
-The demo goal is an honest village simulation. Real network actions are restricted to NEAR testnet transfers. Agent decisions use free Gemini, free Groq, or deterministic rules. Spending rules are always plain code and never delegated to a model.
+The honest demo boundary is simple: real value movement is NEAR testnet USDC only. Pricing can show a free `INTENTS QUOTE (MAINNET DATA)` dry quote, which is pricing data only and never a settlement. When testnet credentials are absent, the whole village runs on a simulated `DEMO LEDGER`.
 
-## Current implementation
+![Marketday screenshot placeholder](docs/marketday-screenshot.png)
 
-- Stage 1: Next.js App Router + TypeScript + Tailwind foundations, environment contract, and NEAR capability notes.
-- Stage 2: React Three Fiber floating island diorama with procedural buildings, trees, clouds, camera descent, and a day to night palette cycle.
-- NEAR Intents is used only for free dry quotes from mainnet data and is labeled `INTENTS QUOTE (MAINNET DATA)`. It never settles a transaction.
-- Stage 3 to 10: server-side NEAR adapters, 1Click dry quotes, agent ticks, SSE, spending leash, market animation, observer login, replayable story beat, Supabase persistence boundary, visual tour, record mode, and Vercel cron configuration.
+## What is real and what is simulated
+
+| Surface | Real | Simulated or optional |
+| --- | --- | --- |
+| Wallets | Named NEAR testnet subaccounts under `marketday.testnet` | Demo wallet labels when setup is absent |
+| Transfers | USDC transfers between seeded testnet agents, with transaction hashes and explorer links | Demo ledger balances and story state |
+| Pricing | Free dry Intents quote labeled `INTENTS QUOTE (MAINNET DATA)` | Deterministic price fallback |
+| Agent brain | Gemini, then Groq, then deterministic rules | Rule fallback when keys are absent or output is invalid |
+| Login | GitHub OAuth when configured | Guest watch mode always works |
+| Persistence | Supabase when configured | In memory local persistence |
+
+## The 60 second demo
+
+1. Open `/` and wait for the island HUD to show the current mode.
+2. Open the scenarios dock and press `Run the story`.
+3. Watch the baker run out of flour, compare offers, block the overcharge, and settle the fair offer.
+4. Read the feed. Real settlements say `TESTNET TRANSFER` and include a testnet explorer link. Simulated events say `DEMO LEDGER` or `LOCAL RULE`.
+5. Press `Trigger an overcharge` to show the deterministic leash.
+6. Open `/status` for account balances, testnet links, LLM usage, and the environment checklist.
+7. Open `/record` for a chrome free capture view.
+
+## Quick start
+
+```bash
+npm install
+npm run setup:env
+npm run dev
+```
+
+Open `http://localhost:3000`. Guest watch mode and in memory persistence work without OAuth, Supabase, or an AI key.
+
+To enable real testnet mode:
+
+```bash
+npx tsx scripts/make-account.ts --write-env
+npm run seed:agents
+npm run doctor
+```
+
+The seed command creates `baker.marketday.testnet`, `farmer.marketday.testnet`, `farmer2.marketday.testnet`, `miller.marketday.testnet`, and `merchant.marketday.testnet`. Agent keys remain server only in ignored `.near-agents.json` and `NEAR_AGENT_PRIVATE_KEYS_JSON`.
+
+## Routes
+
+`/` is the floating island and live feed. `/login` supports guest watch and optional GitHub login. `/market` shows bids, offers, and recent trades. `/leash` edits the local spending rules. `/status` shows mode, balances, links, LLM usage, and environment readiness. `/about` explains the real versus simulated boundary and roadmap. `/record` is a chrome free capture view.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  Visitor[Observer browser] --> Scene[React Three Fiber or static canvas scene]
-  Scene --> Events[SSE /api/events]
-  Scene --> Tick[POST /api/tick or Demo]
-  Cron[Vercel Cron] --> Tick
+  Browser[Observer browser] --> Island[Floating island]
+  Island --> Events[Short poll /api/events]
+  Island --> Tick[POST /api/tick]
+  Cron[External cron] --> CronTick[GET /api/cron/tick]
   Tick --> Economy[Typed economy store]
+  CronTick --> Economy
   Economy --> Policy[Deterministic spending leash]
-  Economy --> Agents[Anthropic JSON or rule fallback]
-  Economy --> Settlement[SettlementAdapter]
-  Settlement --> Testnet[NEAR testnet USDC transfer]
-  Settlement --> Quote[1Click dry quote, mainnet data]
-  Settlement --> Demo[DEMO LEDGER]
+  Economy --> Brain[Gemini or Groq or rules]
+  Economy --> Settlement[Testnet settlement]
+  Settlement --> NEAR[NEAR testnet USDC]
+  Economy --> Demo[DEMO LEDGER]
 ```
 
-## What is real
+## Free deployment
 
-| Surface | With credentials | Without credentials |
-| --- | --- | --- |
-| Agent accounts | NEAR testnet subaccounts | DEMO LEDGER account IDs |
-| Agent money | Testnet USDC transfer | In-memory balances |
-| Pricing | 1Click `dry: true` quote, labeled mainnet data | Deterministic fallback |
-| Swap settlement | Testnet USDC transfer when configured | Demo ledger otherwise |
-| Social login | Google or GitHub through Auth.js | Guest watch mode |
-| Persistence | Supabase REST snapshot | In-memory process state |
+See [`docs/deploy-free.md`](docs/deploy-free.md) for exact faucet, AI Studio, Supabase, GitHub OAuth, Vercel, and cron-job.org steps.
 
-## Demo script
-
-1. Open `/` and choose `ENABLE SOUND` after the page loads.
-2. Press `D` or choose `DEMO [ D ]`.
-3. Watch the baker run out of flour, three offers appear, the overcharge get blocked, and the fair offer settle.
-4. Watch the baker produce bread and the merchant buy it.
-5. Open `/record` for a clean capture view and `/about` for the judge summary.
-6. Read the live feed labels. `TESTNET TRANSFER`, `INTENTS QUOTE (MAINNET DATA)`, and `DEMO LEDGER` are never conflated.
-
-The Vercel cron route calls one bounded tick every five minutes. Client ticks are useful for the live demo, while the cron route keeps deployed activity moving without a forever-running function.
-
-## Run locally
+## Development checks
 
 ```bash
-npm install
-cp .env.example .env.local
-npm run dev
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run check:secrets
 ```
 
-Then open `http://localhost:3000`.
+## Roadmap after the hackathon
 
-## Hackathon window
-
-Marketday is being built for the NEAR hackathon dev window of November 1 to 14, 2026. See [`docs/near-notes.md`](docs/near-notes.md) for verified capability notes and links.
+- Mainnet swaps with spending caps
+- Bring your own agent
