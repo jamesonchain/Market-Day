@@ -1,14 +1,11 @@
-import MarketdayConsole from "@/components/marketday-console";
+import LandingPage from "@/components/landing-page";
 import { getAgents } from "@/lib/economy/store";
-import { actualAppMode, agentAccountId, readBlockHeight } from "@/lib/near/runtime";
-import { getPolicyUsage } from "@/lib/policy/store";
+import { actualAppMode, agentAccountId } from "@/lib/near/runtime";
+import { getEvents } from "@/lib/economy/store";
 
 export const dynamic = "force-dynamic";
-export default async function Home({ searchParams }: { searchParams?: Promise<{ panel?: string }> }) {
+export default async function Home() {
   const mode = await actualAppMode();
-  const blockHeight = await readBlockHeight();
-  const agents = getAgents().map((agent) => ({ ...agent, accountId: agentAccountId(agent.role), explorer: `https://testnet.nearblocks.io/address/${agentAccountId(agent.role)}`, usage: getPolicyUsage(agent.role) }));
-  const requested = (await searchParams)?.panel;
-  const initialPanel = ["feed", "market", "leash", "status"].includes(requested ?? "") ? requested as "feed" | "market" | "leash" | "status" : "feed";
-  return <MarketdayConsole snapshot={{ mode, blockHeight, agents }} initialPanel={initialPanel} />;
+  const agents = getAgents().map((agent) => ({ ...agent, accountId: agentAccountId(agent.role), explorer: `https://testnet.nearblocks.io/address/${agentAccountId(agent.role)}` }));
+  return <LandingPage agents={agents} events={getEvents()} mode={mode} />;
 }
