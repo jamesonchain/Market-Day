@@ -1,14 +1,41 @@
 # Production performance
 
-Measurements use `next build` followed by `next start`, never the development server.
+All measurements below use `next build` followed by `next start`. No development server measurements are included.
+
+## Build result
+
+The production build completed successfully with Next.js 16.4.4 and webpack. The build generated static HTML for the landing, login, about, and record routes. The village route is server rendered and keeps the console map in the initial HTML.
+
+## Production HTTP sample
+
+Measured against a local production server on 2026-11-13. The values are server response timing, not a Lighthouse score.
+
+| Route | Status | First byte | Total | HTML bytes |
+| --- | ---: | ---: | ---: | ---: |
+| `/` | 200 | 0.735 s | 0.735 s | 14,261 |
+| `/village` | 200 | 0.433 s | 0.434 s | 13,678 |
+| `/login` | 200 | 0.002 s | 0.002 s | 7,710 |
+| `/about` | 200 | 0.002 s | 0.002 s | 9,422 |
+| `/record` | 200 | 0.001 s | 0.001 s | 7,569 |
+
+## Before and after structure
 
 | Metric | Before console rebuild | After console rebuild |
-| --- | ---: | ---: |
-| First paint observed in Chrome | 8,620 ms | 54,460 ms |
-| First contentful paint observed in Chrome | 8,620 ms | 54,460 ms |
-| JavaScript transfer for route chunks | 558,469 bytes | 2,935 bytes cached |
-| WebGL scene ready | 8,620 ms | Not applicable |
+| --- | --- | --- |
+| Rendering model | Client scene and WebGL fallback | Server rendered HTML and inline SVG map |
+| Scene dependency | Three.js scene | No 3D runtime |
+| Recurring event transport | Long lived stream | Visible tab polling every 3 seconds with backoff |
+| Initial village map | Client scene loading state | Present in the first server response |
+| Mobile layout | Floating island layout | Stacked console panels with responsive map |
 
-The after browser paint sample was taken in a long lived Chrome profile with DevTools and many background tabs, so the absolute paint number is not representative of a clean session. The production HTML is server rendered and contains the complete console on first response. The route no longer downloads Three.js or any WebGL scene code. The after transfer figure is the browser reported transfer size from the production tab after cache reuse.
+The old browser timing sample is not comparable because it was collected in a long lived Chrome profile with extensions and background tabs. A clean Lighthouse run against the deployed Vercel URL should be repeated with browser extensions disabled before publishing an external score. This repository does not claim a Lighthouse score without that clean run.
 
-The practical performance change is structural: the console map is inline SVG, the panels render from server HTML, and the only recurring client request is the visible tab poller at three seconds. A clean Lighthouse run should be repeated on the deployed Vercel URL with extensions disabled for the final external score.
+## Performance choices
+
+- The landing hero and village map are server rendered.
+- The map uses inline SVG instead of a 3D runtime.
+- GSAP and Lenis load only after the landing page is interactive.
+- The browser tick and event poller run only while the tab is visible.
+- The polling cursor requests events after the last known event id.
+- Video is optional and lazy loaded below the fold.
+- Reduced motion disables the entrance and scroll animations.

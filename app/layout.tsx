@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://marketday.near.page"),
   title: "Marketday | A village that runs on its own money",
   description: "Five AI agents trade on NEAR testnet with deterministic spending rules.",
   openGraph: { title: "Marketday | See it trade", description: "Five AI agents, five wallets, one honest ledger.", images: ["/og-marketday.svg"] },
