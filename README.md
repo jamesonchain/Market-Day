@@ -1,31 +1,33 @@
 # Marketday
 
-Marketday is a compact console for watching five autonomous villagers farm, mill, bake, and trade on NEAR testnet. The village has a deterministic spending leash, a live event ledger, free agent providers, and a clean guest mode.
-
-The honest demo boundary is simple: real value movement is NEAR testnet USDC only. Pricing can show a free `INTENTS QUOTE (MAINNET DATA)` dry quote, which is pricing data only and never a settlement. When testnet credentials are absent, the whole village runs on a simulated `DEMO LEDGER`.
+Marketday is a fast, honest console for five autonomous villagers trading on NEAR testnet. Each villager has a wallet, a goal, and deterministic spending rules. The demo shows needs, bids, blocked overcharges, and settled trades in one readable ledger.
 
 ![Marketday screenshot placeholder](docs/marketday-screenshot.png)
 
-## What is real and what is simulated
+Open `/` for the blueprint landing page and `/village` for the live console. The app is free to run and never sends a mainnet transaction.
 
-| Surface | Real | Simulated or optional |
+## What is real
+
+| Surface | Real behavior | Demo behavior |
 | --- | --- | --- |
-| Wallets | Named NEAR testnet subaccounts under `marketday.testnet` | Demo wallet labels when setup is absent |
-| Transfers | USDC transfers between seeded testnet agents, with transaction hashes and explorer links | Demo ledger balances and story state |
-| Pricing | Free dry Intents quote labeled `INTENTS QUOTE (MAINNET DATA)` | Deterministic price fallback |
-| Agent brain | Gemini, then Groq, then deterministic rules | Rule fallback when keys are absent or output is invalid |
+| Wallets | Named NEAR testnet accounts under `marketday.testnet` | Simulated labels when setup is absent |
+| Transfers | Testnet USDC transfers with transaction hashes and testnet explorer links | Simulated balances and events labeled `DEMO LEDGER` |
+| Quotes | Free dry Intents quote labeled `INTENTS QUOTE (MAINNET DATA)` | Deterministic quote fallback |
+| Agent brain | Gemini, then Groq, then deterministic rules | Rules when keys are absent or model JSON is invalid |
 | Login | GitHub OAuth when configured | Guest watch mode always works |
-| Persistence | Supabase when configured | In memory local persistence |
+| Storage | Supabase when configured | In memory storage locally |
+
+Nothing is called on chain unless it is a real testnet transfer. Mainnet data is used only for a free dry quote and never moves money.
 
 ## The 60 second demo
 
-1. Open `/` and wait for the console to show the current mode.
-2. Open the scenarios dock and press `Run the story`.
-3. Watch the baker run out of flour, compare offers, block the overcharge, and settle the fair offer.
-4. Read the feed. Real settlements say `TESTNET TRANSFER` and include a testnet explorer link. Simulated events say `DEMO LEDGER` or `LOCAL RULE`.
-5. Press `Trigger an overcharge` to show the deterministic leash.
-6. Open the status tab from the mode pill for account balances, testnet links, LLM usage, and the environment checklist.
-7. Open `/record` for a chrome free capture view.
+1. Run `npm run dev` and open `http://localhost:3000`.
+2. Click `Enter the village`, then press `Run the story`.
+3. Watch the baker need flour, compare offers, block the overcharge, and settle the fair offer.
+4. Read the ledger. Real settlements show `TESTNET TRANSFER` and a testnet explorer link. Simulated events show `DEMO LEDGER`.
+5. Press `Try an overcharge` to exercise the spending leash.
+6. Open the mode pill to inspect accounts, model usage, environment health, and database mode.
+7. Open `/record` for a capture view without browser chrome.
 
 ## Quick start
 
@@ -35,9 +37,9 @@ npm run setup:env
 npm run dev
 ```
 
-Open `http://localhost:3000`. Guest watch mode and in memory persistence work without OAuth, Supabase, or an AI key.
+Guest watch mode and the local demo ledger work without OAuth, Supabase, wallet keys, or an AI key.
 
-To enable real testnet mode:
+For real testnet mode:
 
 ```bash
 npx tsx scripts/make-account.ts --write-env
@@ -45,34 +47,37 @@ npm run seed:agents
 npm run doctor
 ```
 
-The seed command creates `baker.marketday.testnet`, `farmer.marketday.testnet`, `farmer2.marketday.testnet`, `miller.marketday.testnet`, and `merchant.marketday.testnet`. Agent keys remain server only in ignored `.near-agents.json` and `NEAR_AGENT_PRIVATE_KEYS_JSON`.
+The seed command creates `baker`, `farmer`, `farmer2`, `miller`, and `merchant` under the configured parent. Keys stay server side in ignored `.near-agents.json` and `NEAR_AGENT_PRIVATE_KEYS_JSON`.
 
 ## Routes
 
-`/` is the console and live feed. `/login` supports guest watch and optional GitHub login. `/market`, `/leash`, and `/status` redirect to the console with the matching tab open. `/about` explains the real versus simulated boundary and roadmap. `/record` is a chrome free capture view.
+- `/` landing page
+- `/village` live console
+- `/login` guest watch and optional GitHub login
+- `/about` product explanation and roadmap
+- `/record` capture view
+- `/market`, `/leash`, and `/status` redirect to the matching console panel
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-  Browser[Observer browser] --> Island[Floating island]
-  Island --> Events[Short poll /api/events]
-  Island --> Tick[POST /api/tick]
-  Cron[External cron] --> CronTick[GET /api/cron/tick]
-  Tick --> Economy[Typed economy store]
-  CronTick --> Economy
-  Economy --> Policy[Deterministic spending leash]
-  Economy --> Brain[Gemini or Groq or rules]
-  Economy --> Settlement[Testnet settlement]
+  Browser[Observer browser] --> Events[Short event polling]
+  Browser --> Tick[Protected tick request]
+  Cron[Free external cron] --> Tick
+  Tick --> Store[Typed economy store]
+  Store --> Policy[Deterministic spending leash]
+  Store --> Brain[Gemini or Groq or rules]
+  Store --> Settlement[Testnet settlement]
   Settlement --> NEAR[NEAR testnet USDC]
-  Economy --> Demo[DEMO LEDGER]
+  Store --> Demo[Demo ledger]
 ```
 
 ## Free deployment
 
 See [`docs/deploy-free.md`](docs/deploy-free.md) for exact faucet, AI Studio, Supabase, GitHub OAuth, Vercel, and cron-job.org steps.
 
-## Development checks
+## Checks
 
 ```bash
 npm run typecheck
@@ -86,3 +91,4 @@ npm run check:secrets
 
 - Mainnet swaps with spending caps
 - Bring your own agent
+- Custom policies
