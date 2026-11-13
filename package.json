@@ -25,7 +25,8 @@
     "video:render:lower-third": "cd marketday-videos && node scripts/build-video-props.mjs && mkdir -p out && npx --yes hyperframes@0.9.7 render --composition compositions/lower-third.html -o out/lower-third.mp4",
     "video:render:stat-card": "cd marketday-videos && node scripts/build-video-props.mjs && mkdir -p out && npx --yes hyperframes@0.9.7 render --composition compositions/stat-card.html -o out/stat-card.mp4",
     "video:render:blocked-moment": "cd marketday-videos && node scripts/build-video-props.mjs && mkdir -p out && npx --yes hyperframes@0.9.7 render --composition compositions/blocked-moment.html -o out/blocked-moment.mp4",
-    "video:render:final-outro": "cd marketday-videos && node scripts/build-video-props.mjs && mkdir -p out && npx --yes hyperframes@0.9.7 render --composition compositions/final-outro.html -o out/final-outro.mp4"
+    "video:render:final-outro": "cd marketday-videos && node scripts/build-video-props.mjs && mkdir -p out && npx --yes hyperframes@0.9.7 render --composition compositions/final-outro.html -o out/final-outro.mp4",
+    "video:all": "cd marketday-videos && node scripts/render-all.mjs"
   },
   "repository": {
     "type": "git",

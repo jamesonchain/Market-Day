@@ -3,3 +3,5 @@ out/
 .thumbnails/
 .waveform-cache/
 .DS_Store
+../public/video/*.mp4
+../public/video/*.webm
