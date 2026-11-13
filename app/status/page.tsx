@@ -1,2 +1,2 @@
 import { redirect } from "next/navigation";
-export default function StatusPage() { redirect("/?panel=status"); }
+export default function StatusPage() { redirect("/village?panel=status"); }
