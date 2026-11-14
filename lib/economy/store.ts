@@ -7,13 +7,14 @@ import { loadSnapshot, persistenceMode, saveSnapshot } from "./persistence";
 import { agentAccountId, nearConfig, readUsdcRaw } from "../near/runtime";
 
 const roles: AgentRole[] = ["baker", "farmer", "farmerTwo", "miller", "merchant"];
-const agents = new Map<AgentRole, AgentState>([
+const initialAgents = new Map<AgentRole, AgentState>([
   ["baker", { role: "baker", displayName: "Baker", needs: { hunger: 22, supplies: 78 }, inventory: { flour: 0, bread: 1 }, balance: 18, personality: "careful and warm", goal: "keep the ovens running" }],
   ["farmer", { role: "farmer", displayName: "Farmer", needs: { hunger: 38, supplies: 86 }, inventory: { wheat: 18 }, balance: 12, personality: "patient and fair", goal: "trade a fair harvest" }],
   ["farmerTwo", { role: "farmerTwo", displayName: "Farmer Two", needs: { hunger: 42, supplies: 68 }, inventory: { wheat: 15 }, balance: 12, personality: "bold and opportunistic", goal: "test the square" }],
   ["miller", { role: "miller", displayName: "Miller", needs: { hunger: 31, supplies: 74 }, inventory: { grain: 8, flour: 3 }, balance: 20, personality: "precise and quiet", goal: "turn grain into flour" }],
   ["merchant", { role: "merchant", displayName: "Merchant", needs: { hunger: 25, supplies: 65 }, inventory: { bread: 2 }, balance: 30, personality: "curious and social", goal: "keep the market moving" }],
 ]);
+const agents = new Map<AgentRole, AgentState>([...initialAgents].map(([role, agent]) => [role, structuredClone(agent)]));
 let tickNumber = 0;
 let events: EconomyEvent[] = [];
 const listeners = new Set<(event: EconomyEvent) => void>();
@@ -22,6 +23,7 @@ let hydrated: Promise<void> | null = null;
 function emit(event: EconomyEvent) { events = [...events.slice(-99), event]; listeners.forEach((listener) => listener(event)); return event; }
 function event(tick: number, type: EconomyEvent["type"], actor: AgentRole, message: string, label: EconomyEvent["label"], data?: EconomyEvent["data"]): EconomyEvent { return { id: crypto.randomUUID(), tick, at: new Date().toISOString(), type, actor, message, label, data }; }
 function settlementDetails(settlement: { txHash?: string; explorerUrl?: string }) { return settlement.txHash ? ` transaction ${settlement.txHash} ${settlement.explorerUrl ?? ""}` : ""; }
+function clearEconomy() { tickNumber = 0; events = []; resetPolicyUsage(); hydrated = Promise.resolve(); initialAgents.forEach((agent, role) => agents.set(role, structuredClone(agent))); }
 async function canTransfer(role: AgentRole, rawAmount: string) { if (!nearConfig.usdcContractId) return true; const balance = await readUsdcRaw(agentAccountId(role)); return balance === null || balance >= BigInt(rawAmount); }
 
 export function getAgents() { return roles.map((role) => agents.get(role)!); }
@@ -65,7 +67,8 @@ export async function runTick() {
   return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-12), persistence: persistenceMode() };
 }
 
-export async function runStoryBeat() {
+export async function runStoryBeat({ fresh = false }: { fresh?: boolean } = {}) {
+  if (fresh) clearEconomy();
   await hydrate();
   tickNumber += 1;
   const baker = agents.get("baker")!; const farmer = agents.get("farmer")!; const merchant = agents.get("merchant")!;
@@ -98,4 +101,4 @@ export async function runStoryBeat() {
 }
 
 export async function makeBakerHungry() { await hydrate(); const baker = agents.get("baker")!; baker.needs.hunger = 99; baker.needs.supplies = 0; emit(event(tickNumber, "need", "baker", "baker is hungry and out of flour", "LOCAL RULE", { hunger: 99, supplies: 0 })); await persist(); return { tick: tickNumber, agents: getAgents(), events: getEvents().slice(-16), persistence: persistenceMode() }; }
-export async function resetEconomy() { tickNumber = 0; events = []; resetPolicyUsage(); hydrated = Promise.resolve(); agents.get("baker")!.needs = { hunger: 22, supplies: 78 }; agents.get("baker")!.inventory = { flour: 0, bread: 1 }; return { tick: tickNumber, agents: getAgents(), events, persistence: persistenceMode() }; }
+export async function resetEconomy() { clearEconomy(); await persist(); return { tick: tickNumber, agents: getAgents(), events, persistence: persistenceMode() }; }
